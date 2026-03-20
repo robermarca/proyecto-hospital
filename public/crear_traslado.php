@@ -5,38 +5,131 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../app/config/conexion.php';
 
+$errores = [];
+
+
+$sqlPacientes = "SELECT id_paciente, nombre, apellidos FROM pacientes ORDER BY apellidos, nombre";
+$stmtPacientes = $conexion->query($sqlPacientes);
+$pacientes = $stmtPacientes->fetchAll(PDO::FETCH_ASSOC);
+
+$sqlUbicaciones = "SELECT id_ubicacion, nombre, planta FROM ubicaciones ORDER BY nombre, planta";
+$stmtUbicaciones = $conexion->query($sqlUbicaciones);
+$ubicaciones = $stmtUbicaciones->fetchAll(PDO::FETCH_ASSOC);
+
+$sqlUsuarios = "SELECT id_usuario, nombre, apellidos FROM usuarios ORDER BY apellidos, nombre";
+$stmtUsuarios = $conexion->query($sqlUsuarios);
+$usuarios = $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
+
+
+$ids_pacientes_validos = array_map('intval', array_column($pacientes, 'id_paciente'));
+$ids_ubicaciones_validos = array_map('intval', array_column($ubicaciones, 'id_ubicacion'));
+$ids_usuarios_validos = array_map('intval', array_column($usuarios, 'id_usuario'));
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_paciente = $_POST['id_paciente'] ?? '';
     $id_origen = $_POST['id_origen'] ?? '';
     $id_destino = $_POST['id_destino'] ?? '';
     $id_usuario = $_POST['id_usuario'] ?? '';
     $facultativo_solicitante = trim($_POST['facultativo_solicitante'] ?? '');
-
-if ($facultativo_solicitante === '') {
-    $facultativo_solicitante = null;
-}
     $estado = trim($_POST['estado'] ?? '');
-    $estados_validos = ['pendiente', 'en_curso', 'completado', 'cancelado', 'postpuesto'];
 
-    if (!in_array($estado, $estados_validos, true)) {
-        die('Estado no válido');
+    if ($facultativo_solicitante === '') {
+        $facultativo_solicitante = null;
     }
 
-    $sql = "INSERT INTO traslados (id_paciente, id_origen, id_destino, id_usuario, facultativo_solicitante, estado, fecha_solicitud)
-            VALUES (:id_paciente, :id_origen, :id_destino, :id_usuario, :facultativo_solicitante, :estado, NOW())";
+    $estados_validos = ['pendiente', 'en_curso', 'completado', 'cancelado', 'postpuesto'];
 
-    $stmt = $conexion->prepare($sql);
-    $stmt->execute([
-        ':id_paciente' => $id_paciente,
-        ':id_origen' => $id_origen,
-        ':id_destino' => $id_destino,
-        ':id_usuario' => $id_usuario,
-        ':facultativo_solicitante' => $facultativo_solicitante,
-        ':estado' => $estado
-    ]);
+    if ($id_paciente === '') {
+        $errores[] = "Debes seleccionar un paciente.";
+    }
 
-    header('Location: listar_traslados.php');
-    exit;
+    if ($id_origen === '') {
+        $errores[] = "Debes seleccionar un origen.";
+    }
+
+    if ($id_destino === '') {
+        $errores[] = "Debes seleccionar un destino.";
+    }
+
+    if ($id_usuario === '') {
+        $errores[] = "Debes seleccionar un usuario.";
+    }
+
+    if ($id_paciente !== '' && !ctype_digit($id_paciente)) {
+        $errores[] = "El paciente seleccionado no es válido.";
+    }
+
+    if ($id_origen !== '' && !ctype_digit($id_origen)) {
+        $errores[] = "El origen seleccionado no es válido.";
+    }
+
+    if ($id_destino !== '' && !ctype_digit($id_destino)) {
+        $errores[] = "El destino seleccionado no es válido.";
+    }
+
+    if ($id_usuario !== '' && !ctype_digit($id_usuario)) {
+        $errores[] = "El usuario seleccionado no es válido.";
+    }
+
+    if ($id_paciente !== '' && ctype_digit($id_paciente) && !in_array((int)$id_paciente, $ids_pacientes_validos, true)) {
+        $errores[] = "El paciente seleccionado no existe.";
+    }
+
+    if ($id_origen !== '' && ctype_digit($id_origen) && !in_array((int)$id_origen, $ids_ubicaciones_validos, true)) {
+        $errores[] = "El origen seleccionado no existe.";
+    }
+
+    if ($id_destino !== '' && ctype_digit($id_destino) && !in_array((int)$id_destino, $ids_ubicaciones_validos, true)) {
+        $errores[] = "El destino seleccionado no existe.";
+    }
+
+    if ($id_usuario !== '' && ctype_digit($id_usuario) && !in_array((int)$id_usuario, $ids_usuarios_validos, true)) {
+        $errores[] = "El usuario seleccionado no existe.";
+    }
+
+    if ($id_origen !== '' && $id_destino !== '' && $id_origen === $id_destino) {
+        $errores[] = "El origen y el destino no pueden ser el mismo.";
+    }
+
+    if ($estado === '') {
+        $errores[] = "Debes seleccionar un estado.";
+    } elseif (!in_array($estado, $estados_validos, true)) {
+        $errores[] = "El estado seleccionado no es válido.";
+    }
+
+    if (empty($errores)) {
+        $sql = "INSERT INTO traslados (
+                    id_paciente,
+                    id_origen,
+                    id_destino,
+                    id_usuario,
+                    facultativo_solicitante,
+                    estado,
+                    fecha_solicitud
+                ) VALUES (
+                    :id_paciente,
+                    :id_origen,
+                    :id_destino,
+                    :id_usuario,
+                    :facultativo_solicitante,
+                    :estado,
+                    NOW()
+                )";
+
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute([
+            ':id_paciente' => (int)$id_paciente,
+            ':id_origen' => (int)$id_origen,
+            ':id_destino' => (int)$id_destino,
+            ':id_usuario' => (int)$id_usuario,
+            ':facultativo_solicitante' => $facultativo_solicitante,
+            ':estado' => $estado
+        ]);
+
+        header('Location: listar_traslados.php');
+        exit;
+    }
 }
 ?>
 
@@ -49,53 +142,106 @@ if ($facultativo_solicitante === '') {
 <body>
     <h1>Nuevo traslado</h1>
 
+    <?php if (!empty($errores)): ?>
+        <ul style="color: red;">
+            <?php foreach ($errores as $error): ?>
+                <li><?= htmlspecialchars($error) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
     <form method="POST" action="">
         <div>
-            <label for="id_paciente">ID paciente:</label>
-            <input type="number" name="id_paciente" id="id_paciente" required>
+            <label for="id_paciente">Paciente:</label>
+            <select name="id_paciente" id="id_paciente" required>
+                <option value="">-- Selecciona paciente --</option>
+                <?php foreach ($pacientes as $paciente): ?>
+                    <option
+                        value="<?= htmlspecialchars($paciente['id_paciente']) ?>"
+                        <?= (($_POST['id_paciente'] ?? '') == $paciente['id_paciente']) ? 'selected' : '' ?>
+                    >
+                        <?= htmlspecialchars($paciente['apellidos'] . ', ' . $paciente['nombre']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <br>
 
         <div>
-            <label for="id_origen">ID origen:</label>
-            <input type="number" name="id_origen" id="id_origen" required>
+            <label for="id_origen">Origen:</label>
+            <select name="id_origen" id="id_origen" required>
+                <option value="">-- Selecciona origen --</option>
+                <?php foreach ($ubicaciones as $ubicacion): ?>
+                    <option
+                        value="<?= htmlspecialchars($ubicacion['id_ubicacion']) ?>"
+                        <?= (($_POST['id_origen'] ?? '') == $ubicacion['id_ubicacion']) ? 'selected' : '' ?>
+                    >
+                        <?= htmlspecialchars($ubicacion['nombre'] . ' - Planta ' . $ubicacion['planta']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <br>
 
         <div>
-            <label for="id_destino">ID destino:</label>
-            <input type="number" name="id_destino" id="id_destino" required>
+            <label for="id_destino">Destino:</label>
+            <select name="id_destino" id="id_destino" required>
+                <option value="">-- Selecciona destino --</option>
+                <?php foreach ($ubicaciones as $ubicacion): ?>
+                    <option
+                        value="<?= htmlspecialchars($ubicacion['id_ubicacion']) ?>"
+                        <?= (($_POST['id_destino'] ?? '') == $ubicacion['id_ubicacion']) ? 'selected' : '' ?>
+                    >
+                        <?= htmlspecialchars($ubicacion['nombre'] . ' - Planta ' . $ubicacion['planta']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <br>
 
         <div>
-            <label for="id_usuario">ID usuario:</label>
-            <input type="number" name="id_usuario" id="id_usuario" required>
+            <label for="id_usuario">Usuario / Celador:</label>
+            <select name="id_usuario" id="id_usuario" required>
+                <option value="">-- Selecciona usuario --</option>
+                <?php foreach ($usuarios as $usuario): ?>
+                    <option
+                        value="<?= htmlspecialchars($usuario['id_usuario']) ?>"
+                        <?= (($_POST['id_usuario'] ?? '') == $usuario['id_usuario']) ? 'selected' : '' ?>
+                    >
+                        <?= htmlspecialchars($usuario['apellidos'] . ', ' . $usuario['nombre']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <br>
 
         <div>
             <label for="facultativo_solicitante">Facultativo solicitante:</label>
-            <input type="text" name="facultativo_solicitante" id="facultativo_solicitante">
+            <input
+                type="text"
+                name="facultativo_solicitante"
+                id="facultativo_solicitante"
+                value="<?= htmlspecialchars($_POST['facultativo_solicitante'] ?? '') ?>"
+            >
         </div>
 
         <br>
 
         <div>
-    <label for="estado">Estado:</label>
-    <select name="estado" id="estado" required>
-        <option value="">-- Selecciona --</option>
-        <option value="pendiente">Pendiente</option>
-        <option value="en_curso">En curso</option>
-        <option value="completado">Completado</option>
-        <option value="cancelado">Cancelado</option>
-        <option value="postpuesto">Postpuesto</option>
-    </select>
-</div>
+            <label for="estado">Estado:</label>
+            <select name="estado" id="estado" required>
+                <option value="">-- Selecciona estado --</option>
+                <option value="pendiente" <?= (($_POST['estado'] ?? '') === 'pendiente') ? 'selected' : '' ?>>Pendiente</option>
+                <option value="en_curso" <?= (($_POST['estado'] ?? '') === 'en_curso') ? 'selected' : '' ?>>En curso</option>
+                <option value="completado" <?= (($_POST['estado'] ?? '') === 'completado') ? 'selected' : '' ?>>Completado</option>
+                <option value="cancelado" <?= (($_POST['estado'] ?? '') === 'cancelado') ? 'selected' : '' ?>>Cancelado</option>
+                <option value="postpuesto" <?= (($_POST['estado'] ?? '') === 'postpuesto') ? 'selected' : '' ?>>Postpuesto</option>
+            </select>
+        </div>
 
         <br>
 
