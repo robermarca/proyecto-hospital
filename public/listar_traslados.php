@@ -12,6 +12,7 @@ SELECT
     p.apellidos,
     o.nombre AS origen,
     d.nombre AS destino,
+    t.prueba_solicitada,
     t.estado,
     t.fecha_solicitud
 FROM traslados t
@@ -30,43 +31,12 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>CelCare - Traslados</title>
-
-    <style>
-        body {
-            font-family: Arial;
-            background: #f2f5f9;
-            padding: 20px;
-        }
-
-        h1 {
-            color: #1e3a8a;
-        }
-
-        .card {
-            background: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        .pendiente {
-            border-left: 6px solid red;
-        }
-
-        .en_curso {
-            border-left: 6px solid orange;
-        }
-
-        .completado {
-            border-left: 6px solid green;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-<h1>🚑 Traslados</h1>
+<h1>Traslados</h1>
 
 <?php if (count($traslados) > 0): ?>
 
@@ -77,12 +47,22 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <strong>
                 <?php echo $t['nombre'] . " " . $t['apellidos']; ?>
             </strong><br><br>
+            <?php if (!empty($t['prueba_solicitada'])): ?>
+                <span class="prueba">
+    Prueba: <?php echo htmlspecialchars($t['prueba_solicitada']); ?><br><br>
+<?php endif; ?>
 
-            📍 <?php echo $t['origen']; ?> → <?php echo $t['destino']; ?><br><br>
+             <?php echo $t['origen']; ?> → <?php echo $t['destino']; ?><br><br>
 
-            Estado: <strong><?php echo $t['estado']; ?></strong><br>
+            Estado: <strong><?php echo $t['estado']; ?></strong><br><br>
 
-            🕒 <?php echo $t['fecha_solicitud']; ?>
+            <span class="hora">
+                <?php echo date('H:i', strtotime($t['fecha_solicitud'])); ?>
+                </span><br>
+
+                <span class="fecha">
+    <?php echo date('d/m/y', strtotime($t['fecha_solicitud'])); ?>
+                </span>
 
         </div>
 

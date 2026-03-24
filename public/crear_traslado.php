@@ -7,7 +7,6 @@ require_once __DIR__ . '/../app/config/conexion.php';
 
 $errores = [];
 
-
 $sqlPacientes = "SELECT id_paciente, nombre, apellidos FROM pacientes ORDER BY apellidos, nombre";
 $stmtPacientes = $conexion->query($sqlPacientes);
 $pacientes = $stmtPacientes->fetchAll(PDO::FETCH_ASSOC);
@@ -16,86 +15,60 @@ $sqlUbicaciones = "SELECT id_ubicacion, nombre, planta FROM ubicaciones ORDER BY
 $stmtUbicaciones = $conexion->query($sqlUbicaciones);
 $ubicaciones = $stmtUbicaciones->fetchAll(PDO::FETCH_ASSOC);
 
-$sqlUsuarios = "SELECT id_usuario, nombre, apellidos FROM usuarios ORDER BY apellidos, nombre";
-$stmtUsuarios = $conexion->query($sqlUsuarios);
-$usuarios = $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
-
-
 $ids_pacientes_validos = array_map('intval', array_column($pacientes, 'id_paciente'));
 $ids_ubicaciones_validos = array_map('intval', array_column($ubicaciones, 'id_ubicacion'));
-$ids_usuarios_validos = array_map('intval', array_column($usuarios, 'id_usuario'));
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_paciente = $_POST['id_paciente'] ?? '';
     $id_origen = $_POST['id_origen'] ?? '';
     $id_destino = $_POST['id_destino'] ?? '';
-    $id_usuario = $_POST['id_usuario'] ?? '';
+    $id_usuario = null;
     $facultativo_solicitante = trim($_POST['facultativo_solicitante'] ?? '');
-    $estado = trim($_POST['estado'] ?? '');
-
-    if ($facultativo_solicitante === '') {
-        $facultativo_solicitante = null;
-    }
-
-    $estados_validos = ['pendiente', 'en_curso', 'completado', 'cancelado', 'postpuesto'];
+    $prueba_solicitada = trim($_POST['prueba_solicitada'] ?? '');
+    $estado = 'pendiente';
 
     if ($id_paciente === '') {
         $errores[] = "Debes seleccionar un paciente.";
+    } elseif (!ctype_digit($id_paciente)) {
+        $errores[] = "El paciente seleccionado no es válido.";
+    } elseif (!in_array((int)$id_paciente, $ids_pacientes_validos, true)) {
+        $errores[] = "El paciente seleccionado no existe.";
     }
 
     if ($id_origen === '') {
         $errores[] = "Debes seleccionar un origen.";
+    } elseif (!ctype_digit($id_origen)) {
+        $errores[] = "El origen seleccionado no es válido.";
+    } elseif (!in_array((int)$id_origen, $ids_ubicaciones_validos, true)) {
+        $errores[] = "El origen seleccionado no existe.";
     }
 
     if ($id_destino === '') {
         $errores[] = "Debes seleccionar un destino.";
-    }
-
-    if ($id_usuario === '') {
-        $errores[] = "Debes seleccionar un usuario.";
-    }
-
-    if ($id_paciente !== '' && !ctype_digit($id_paciente)) {
-        $errores[] = "El paciente seleccionado no es válido.";
-    }
-
-    if ($id_origen !== '' && !ctype_digit($id_origen)) {
-        $errores[] = "El origen seleccionado no es válido.";
-    }
-
-    if ($id_destino !== '' && !ctype_digit($id_destino)) {
+    } elseif (!ctype_digit($id_destino)) {
         $errores[] = "El destino seleccionado no es válido.";
-    }
-
-    if ($id_usuario !== '' && !ctype_digit($id_usuario)) {
-        $errores[] = "El usuario seleccionado no es válido.";
-    }
-
-    if ($id_paciente !== '' && ctype_digit($id_paciente) && !in_array((int)$id_paciente, $ids_pacientes_validos, true)) {
-        $errores[] = "El paciente seleccionado no existe.";
-    }
-
-    if ($id_origen !== '' && ctype_digit($id_origen) && !in_array((int)$id_origen, $ids_ubicaciones_validos, true)) {
-        $errores[] = "El origen seleccionado no existe.";
-    }
-
-    if ($id_destino !== '' && ctype_digit($id_destino) && !in_array((int)$id_destino, $ids_ubicaciones_validos, true)) {
+    } elseif (!in_array((int)$id_destino, $ids_ubicaciones_validos, true)) {
         $errores[] = "El destino seleccionado no existe.";
     }
 
-    if ($id_usuario !== '' && ctype_digit($id_usuario) && !in_array((int)$id_usuario, $ids_usuarios_validos, true)) {
-        $errores[] = "El usuario seleccionado no existe.";
-    }
-
-    if ($id_origen !== '' && $id_destino !== '' && $id_origen === $id_destino) {
+    if (
+        $id_origen !== '' && ctype_digit($id_origen) &&
+        $id_destino !== '' && ctype_digit($id_destino) &&
+        $id_origen === $id_destino
+    ) {
         $errores[] = "El origen y el destino no pueden ser el mismo.";
     }
 
-    if ($estado === '') {
-        $errores[] = "Debes seleccionar un estado.";
-    } elseif (!in_array($estado, $estados_validos, true)) {
-        $errores[] = "El estado seleccionado no es válido.";
+    if ($facultativo_solicitante === '') {
+        $errores[] = "Debes indicar el facultativo solicitante.";
+    }
+
+    if ($prueba_solicitada !== '' && mb_strlen($prueba_solicitada) > 100) {
+        $errores[] = "La prueba solicitada no puede superar los 100 caracteres.";
+    }
+
+    if ($prueba_solicitada === '') {
+        $prueba_solicitada = null;
     }
 
     if (empty($errores)) {
@@ -105,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     id_destino,
                     id_usuario,
                     facultativo_solicitante,
+                    prueba_solicitada,
                     estado,
                     fecha_solicitud
                 ) VALUES (
@@ -113,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     :id_destino,
                     :id_usuario,
                     :facultativo_solicitante,
+                    :prueba_solicitada,
                     :estado,
                     NOW()
                 )";
@@ -122,8 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':id_paciente' => (int)$id_paciente,
             ':id_origen' => (int)$id_origen,
             ':id_destino' => (int)$id_destino,
-            ':id_usuario' => (int)$id_usuario,
+            ':id_usuario' => $id_usuario,
             ':facultativo_solicitante' => $facultativo_solicitante,
+            ':prueba_solicitada' => $prueba_solicitada,
             ':estado' => $estado
         ]);
 
@@ -203,44 +179,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <br>
 
         <div>
-            <label for="id_usuario">Usuario / Celador:</label>
-            <select name="id_usuario" id="id_usuario" required>
-                <option value="">-- Selecciona usuario --</option>
-                <?php foreach ($usuarios as $usuario): ?>
-                    <option
-                        value="<?= htmlspecialchars($usuario['id_usuario']) ?>"
-                        <?= (($_POST['id_usuario'] ?? '') == $usuario['id_usuario']) ? 'selected' : '' ?>
-                    >
-                        <?= htmlspecialchars($usuario['apellidos'] . ', ' . $usuario['nombre']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-
-        <br>
-
-        <div>
             <label for="facultativo_solicitante">Facultativo solicitante:</label>
             <input
                 type="text"
                 name="facultativo_solicitante"
                 id="facultativo_solicitante"
                 value="<?= htmlspecialchars($_POST['facultativo_solicitante'] ?? '') ?>"
+                required
             >
         </div>
 
         <br>
 
         <div>
-            <label for="estado">Estado:</label>
-            <select name="estado" id="estado" required>
-                <option value="">-- Selecciona estado --</option>
-                <option value="pendiente" <?= (($_POST['estado'] ?? '') === 'pendiente') ? 'selected' : '' ?>>Pendiente</option>
-                <option value="en_curso" <?= (($_POST['estado'] ?? '') === 'en_curso') ? 'selected' : '' ?>>En curso</option>
-                <option value="completado" <?= (($_POST['estado'] ?? '') === 'completado') ? 'selected' : '' ?>>Completado</option>
-                <option value="cancelado" <?= (($_POST['estado'] ?? '') === 'cancelado') ? 'selected' : '' ?>>Cancelado</option>
-                <option value="postpuesto" <?= (($_POST['estado'] ?? '') === 'postpuesto') ? 'selected' : '' ?>>Postpuesto</option>
-            </select>
+            <label for="prueba_solicitada">Prueba solicitada:</label>
+            <input
+                type="text"
+                name="prueba_solicitada"
+                id="prueba_solicitada"
+                maxlength="100"
+                value="<?= htmlspecialchars($_POST['prueba_solicitada'] ?? '') ?>"
+            >
         </div>
 
         <br>

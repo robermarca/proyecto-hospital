@@ -1,0 +1,56 @@
+
+
+body {
+    font-family: Arial;
+    background: #d8d9db;
+    padding: 20px;
+}
+
+h1 {
+    color: #e6eaf5;
+    border-radius: 10px;
+    background-color: #4d4c4c;
+    padding: 4px;
+    text-align: center;
+    
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.9);
+}
+
+.pendiente {
+    border-left: 15px solid red;
+}
+
+.en_curso {
+    border-left: 15px solid orange;
+}
+
+.completado {
+    border-left: 15px solid green;
+}
+.cancelado {
+    border-left: 15px solid rgb(81, 79, 79);
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+.pospuesto {
+    border-left: 15px solid blue;
+}
+
+.hora {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: rgb(186, 12, 12);
+}
+
+.fecha {
+    color: #666;
+    font-size: 0.85em;
+}
