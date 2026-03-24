@@ -1,26 +1,29 @@
-
-
 body {
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     background: #d8d9db;
     padding: 20px;
+    margin: 0;
 }
+
+
 
 h1 {
     color: #e6eaf5;
+    background-color: #0959ca;
     border-radius: 10px;
-    background-color: #4d4c4c;
-    padding: 4px;
+    padding: 8px 12px;
     text-align: center;
-    
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px #142946;
 }
+
 
 .card {
     background: white;
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.9);
+    box-shadow: 0 2px 6px #142946;
 }
 
 .pendiente {
@@ -34,6 +37,7 @@ h1 {
 .completado {
     border-left: 15px solid green;
 }
+
 .cancelado {
     border-left: 15px solid rgb(81, 79, 79);
     opacity: 0.6;
@@ -44,6 +48,8 @@ h1 {
     border-left: 15px solid blue;
 }
 
+
+
 .hora {
     font-size: 1.3em;
     font-weight: bold;
@@ -51,6 +57,121 @@ h1 {
 }
 
 .fecha {
-    color: #666;
+    color: #313030;
     font-size: 0.85em;
+}
+
+.prueba {
+    color: #555;
+    font-size: 0.95em;
+}
+
+
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px #304d77;
+}
+
+.campo {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.campo label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.campo input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #caced2;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.campo input[type="text"]:focus {
+    outline: none;
+    border-color: #4c4c4d;
+    box-shadow: 0 2px 6px #142946
+}
+
+
+
+button {
+    background-color: #4d4c4c;
+    color: #e6eaf5;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3b3a3a;
+}
+
+
+
+.errores {
+    background: #ffe5e5;
+    border: 1px solid #e0a0a0;
+    color: #8b1e1e;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+}
+
+.errores ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+
+
+.lista-sugerencias {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 180px;
+    overflow-y: auto;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.opcion-sugerencia {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.opcion-sugerencia:last-child {
+    border-bottom: none;
+}
+
+.opcion-sugerencia:hover {
+    background: #f2f5f9;
+}
+
+/* ENLACES */
+
+a {
+    color: #172a5c;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }

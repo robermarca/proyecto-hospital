@@ -36,7 +36,7 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
 
-<h1>Traslados</h1>
+<h1>Lista de traslados</h1>
 
 <?php if (count($traslados) > 0): ?>
 
@@ -73,6 +73,7 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <p>No hay traslados registrados.</p>
 
 <?php endif; ?>
+<a href="crear_traslado.php">Volver a Nuevo traslado</a>
 
 </body>
 </html>

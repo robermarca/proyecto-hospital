@@ -114,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Crear traslado</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Nuevo traslado</h1>
@@ -126,59 +127,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </ul>
     <?php endif; ?>
 
+
     <form method="POST" action="">
-        <div>
-            <label for="id_paciente">Paciente:</label>
-            <select name="id_paciente" id="id_paciente" required>
-                <option value="">-- Selecciona paciente --</option>
-                <?php foreach ($pacientes as $paciente): ?>
-                    <option
-                        value="<?= htmlspecialchars($paciente['id_paciente']) ?>"
-                        <?= (($_POST['id_paciente'] ?? '') == $paciente['id_paciente']) ? 'selected' : '' ?>
-                    >
-                        <?= htmlspecialchars($paciente['apellidos'] . ', ' . $paciente['nombre']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+        <div class="campo">
+            <label for="buscar_paciente">Paciente</label>
+            <input type="text" id="buscar_paciente" name="buscar_paciente" placeholder="escribe nombre o apellidos" autocomplete="off" required>
+
+            <input type="hidden" name="id_paciente" id="id_paciente">
+             <div id="lista_pacientes" class="lista-sugerencias"></div>
         </div>
 
         <br>
 
-        <div>
-            <label for="id_origen">Origen:</label>
-            <select name="id_origen" id="id_origen" required>
-                <option value="">-- Selecciona origen --</option>
-                <?php foreach ($ubicaciones as $ubicacion): ?>
-                    <option
-                        value="<?= htmlspecialchars($ubicacion['id_ubicacion']) ?>"
-                        <?= (($_POST['id_origen'] ?? '') == $ubicacion['id_ubicacion']) ? 'selected' : '' ?>
-                    >
-                        <?= htmlspecialchars($ubicacion['nombre'] . ' - Planta ' . $ubicacion['planta']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+        <div class="campo">
+            <label for="buscar_origen">Origen</label>
+            <input type="text" name="buscar_origen" id="buscar_origen" placeholder="Buscar origen..." autocomplete="off" required>
+
+            <input type="hidden" name="id_origen" id="id_origen">
+            <div id="lista_origen" class="lista-sugerencias"></div>
         </div>
 
         <br>
 
-        <div>
-            <label for="id_destino">Destino:</label>
-            <select name="id_destino" id="id_destino" required>
-                <option value="">-- Selecciona destino --</option>
-                <?php foreach ($ubicaciones as $ubicacion): ?>
-                    <option
-                        value="<?= htmlspecialchars($ubicacion['id_ubicacion']) ?>"
-                        <?= (($_POST['id_destino'] ?? '') == $ubicacion['id_ubicacion']) ? 'selected' : '' ?>
-                    >
-                        <?= htmlspecialchars($ubicacion['nombre'] . ' - Planta ' . $ubicacion['planta']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+        <div class="campo">
+            <label for="buscar_destino">Destino</label>
+            <input type="text" name="buscar_destino" id="buscar_destino" placeholder="Buscar destino..." autocomplete="off" required>
+
+            <input type="hidden" name="id_destino" id="id_destino">
+            <div id="lista_destino" class="lista-sugerencias"></div>  
         </div>
 
         <br>
 
-        <div>
+        <div class="campo">
+            <label for="prueba_solicitada">Prueba solicitada:</label>
+            <input
+                type="text"
+                name="prueba_solicitada"
+                id="prueba_solicitada"
+                maxlength="100"
+                placeholder ="Ej: TAC, scanner, ecocardiograma..."
+                value="<?= htmlspecialchars($_POST['prueba_solicitada'] ?? '') ?>"
+            >
+        </div>
+        <br>
+
+        <div class="campo">
             <label for="facultativo_solicitante">Facultativo solicitante:</label>
             <input
                 type="text"
@@ -191,23 +185,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <br>
 
-        <div>
-            <label for="prueba_solicitada">Prueba solicitada:</label>
-            <input
-                type="text"
-                name="prueba_solicitada"
-                id="prueba_solicitada"
-                maxlength="100"
-                value="<?= htmlspecialchars($_POST['prueba_solicitada'] ?? '') ?>"
-            >
-        </div>
-
-        <br>
-
         <button type="submit">Guardar traslado</button>
     </form>
 
     <br>
-    <a href="listar_traslados.php">Volver al listado</a>
+    <a href="listar_traslados.php">Ver listado</a>
+
+    <script>
+    const pacientes = <?= json_encode(
+        array_map(function($p) {
+            return [
+                'id' => $p['id_paciente'],
+                'nombre' => $p['apellidos'] . ', ' . $p['nombre']
+            ];
+        }, $pacientes)
+    ); ?>;
+    const ubicaciones = <?= json_encode(
+        array_map(function($u){
+            return [
+                'id' => $u['id_ubicacion'],
+                'nombre' => $u['nombre'] . ' - Planta ' . $u['planta']
+            ];
+        }, $ubicaciones)
+    ); ?>;
+    </script>
+    <script src="script.js"></script>
 </body>
 </html>

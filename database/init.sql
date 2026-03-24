@@ -53,6 +53,7 @@ CREATE TABLE traslados (
     facultativo_solicitante VARCHAR(100),
     estado VARCHAR(50) NOT NULL DEFAULT 'pendiente',
     fecha_solicitud DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    prueba_solicitada VARCHAR(100) NULL,
 
     CONSTRAINT fk_traslado_paciente
         FOREIGN KEY (id_paciente)
