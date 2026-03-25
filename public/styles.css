@@ -8,6 +8,9 @@ body {
 
 
 h1 {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     color: #e6eaf5;
     background-color: #0959ca;
     border-radius: 10px;
@@ -174,4 +177,30 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.boton-enlace {
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding: 10px 14px;
+    background-color: #4d4c4c;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.boton-enlace:hover {
+    background-color: #2f2f2f;
+}
+
+.barra-inferior {
+    position: sticky;
+    bottom: 0;
+    background: #d8d9db;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
 }

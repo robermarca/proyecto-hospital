@@ -5,7 +5,6 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../app/config/conexion.php';
 
-$errores = [];
 
 $sqlPacientes = "SELECT id_paciente, nombre, apellidos FROM pacientes ORDER BY apellidos, nombre";
 $stmtPacientes = $conexion->query($sqlPacientes);
@@ -15,96 +14,28 @@ $sqlUbicaciones = "SELECT id_ubicacion, nombre, planta FROM ubicaciones ORDER BY
 $stmtUbicaciones = $conexion->query($sqlUbicaciones);
 $ubicaciones = $stmtUbicaciones->fetchAll(PDO::FETCH_ASSOC);
 
-$ids_pacientes_validos = array_map('intval', array_column($pacientes, 'id_paciente'));
-$ids_ubicaciones_validos = array_map('intval', array_column($ubicaciones, 'id_ubicacion'));
+$id_paciente_seleccionado = $_POST['id_paciente'] ?? '';
+$id_origen_seleccionado = $_POST['id_origen'] ?? '';
+$id_destino_seleccionado = $_POST['id_destino'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_paciente = $_POST['id_paciente'] ?? '';
-    $id_origen = $_POST['id_origen'] ?? '';
-    $id_destino = $_POST['id_destino'] ?? '';
-    $id_usuario = null;
-    $facultativo_solicitante = trim($_POST['facultativo_solicitante'] ?? '');
-    $prueba_solicitada = trim($_POST['prueba_solicitada'] ?? '');
-    $estado = 'pendiente';
+$texto_paciente = '';
+$texto_origen = '';
+$texto_destino = '';
 
-    if ($id_paciente === '') {
-        $errores[] = "Debes seleccionar un paciente.";
-    } elseif (!ctype_digit($id_paciente)) {
-        $errores[] = "El paciente seleccionado no es válido.";
-    } elseif (!in_array((int)$id_paciente, $ids_pacientes_validos, true)) {
-        $errores[] = "El paciente seleccionado no existe.";
+foreach ($pacientes as $p) {
+    if ((string)$p['id_paciente'] === (string)$id_paciente_seleccionado) {
+        $texto_paciente = $p['apellidos'] . ', ' . $p['nombre'];
+        break;
+    }
+}
+
+foreach ($ubicaciones as $u) {
+    if ((string)$u['id_ubicacion'] === (string)$id_origen_seleccionado) {
+        $texto_origen = $u['nombre'] . ' - Planta ' . $u['planta'];
     }
 
-    if ($id_origen === '') {
-        $errores[] = "Debes seleccionar un origen.";
-    } elseif (!ctype_digit($id_origen)) {
-        $errores[] = "El origen seleccionado no es válido.";
-    } elseif (!in_array((int)$id_origen, $ids_ubicaciones_validos, true)) {
-        $errores[] = "El origen seleccionado no existe.";
-    }
-
-    if ($id_destino === '') {
-        $errores[] = "Debes seleccionar un destino.";
-    } elseif (!ctype_digit($id_destino)) {
-        $errores[] = "El destino seleccionado no es válido.";
-    } elseif (!in_array((int)$id_destino, $ids_ubicaciones_validos, true)) {
-        $errores[] = "El destino seleccionado no existe.";
-    }
-
-    if (
-        $id_origen !== '' && ctype_digit($id_origen) &&
-        $id_destino !== '' && ctype_digit($id_destino) &&
-        $id_origen === $id_destino
-    ) {
-        $errores[] = "El origen y el destino no pueden ser el mismo.";
-    }
-
-    if ($facultativo_solicitante === '') {
-        $errores[] = "Debes indicar el facultativo solicitante.";
-    }
-
-    if ($prueba_solicitada !== '' && mb_strlen($prueba_solicitada) > 100) {
-        $errores[] = "La prueba solicitada no puede superar los 100 caracteres.";
-    }
-
-    if ($prueba_solicitada === '') {
-        $prueba_solicitada = null;
-    }
-
-    if (empty($errores)) {
-        $sql = "INSERT INTO traslados (
-                    id_paciente,
-                    id_origen,
-                    id_destino,
-                    id_usuario,
-                    facultativo_solicitante,
-                    prueba_solicitada,
-                    estado,
-                    fecha_solicitud
-                ) VALUES (
-                    :id_paciente,
-                    :id_origen,
-                    :id_destino,
-                    :id_usuario,
-                    :facultativo_solicitante,
-                    :prueba_solicitada,
-                    :estado,
-                    NOW()
-                )";
-
-        $stmt = $conexion->prepare($sql);
-        $stmt->execute([
-            ':id_paciente' => (int)$id_paciente,
-            ':id_origen' => (int)$id_origen,
-            ':id_destino' => (int)$id_destino,
-            ':id_usuario' => $id_usuario,
-            ':facultativo_solicitante' => $facultativo_solicitante,
-            ':prueba_solicitada' => $prueba_solicitada,
-            ':estado' => $estado
-        ]);
-
-        header('Location: listar_traslados.php');
-        exit;
+    if ((string)$u['id_ubicacion'] === (string)$id_destino_seleccionado) {
+        $texto_destino = $u['nombre'] . ' - Planta ' . $u['planta'];
     }
 }
 ?>
@@ -119,21 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>Nuevo traslado</h1>
 
-    <?php if (!empty($errores)): ?>
-        <ul style="color: red;">
-            <?php foreach ($errores as $error): ?>
-                <li><?= htmlspecialchars($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-
-
-    <form method="POST" action="">
+    <form method="POST" action="confirmar_traslado.php">
         <div class="campo">
             <label for="buscar_paciente">Paciente</label>
-            <input type="text" id="buscar_paciente" name="buscar_paciente" placeholder="escribe nombre o apellidos" autocomplete="off" required>
+            <input type="text" id="buscar_paciente" name="buscar_paciente" placeholder="escribe nombre o apellidos" autocomplete="off" required value="<?= htmlspecialchars($texto_paciente) ?>">
 
-            <input type="hidden" name="id_paciente" id="id_paciente">
+            <input type="hidden" name="id_paciente" id="id_paciente" value="<?= htmlspecialchars($id_paciente_seleccionado) ?>">
              <div id="lista_pacientes" class="lista-sugerencias"></div>
         </div>
 
@@ -141,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="campo">
             <label for="buscar_origen">Origen</label>
-            <input type="text" name="buscar_origen" id="buscar_origen" placeholder="Buscar origen..." autocomplete="off" required>
+            <input type="text" name="buscar_origen" id="buscar_origen" placeholder="Buscar origen..." autocomplete="off" required value="<?= htmlspecialchars($texto_origen) ?>">
 
-            <input type="hidden" name="id_origen" id="id_origen">
+            <input type="hidden" name="id_origen" id="id_origen" value="<?= htmlspecialchars($id_origen_seleccionado) ?>">
             <div id="lista_origen" class="lista-sugerencias"></div>
         </div>
 
@@ -151,9 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="campo">
             <label for="buscar_destino">Destino</label>
-            <input type="text" name="buscar_destino" id="buscar_destino" placeholder="Buscar destino..." autocomplete="off" required>
+            <input type="text" name="buscar_destino" id="buscar_destino" placeholder="Buscar destino..." autocomplete="off" required value="<?= htmlspecialchars($texto_destino) ?>">
 
-            <input type="hidden" name="id_destino" id="id_destino">
+            <input type="hidden" name="id_destino" id="id_destino" value="<?= htmlspecialchars($id_destino_seleccionado) ?>">
             <div id="lista_destino" class="lista-sugerencias"></div>  
         </div>
 

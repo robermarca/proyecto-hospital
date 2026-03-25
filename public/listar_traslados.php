@@ -73,7 +73,10 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <p>No hay traslados registrados.</p>
 
 <?php endif; ?>
-<a href="crear_traslado.php">Volver a Nuevo traslado</a>
+<br>
+<div class="barra-inferior">
+    <a href="crear_traslado.php" class="boton-enlace">+ Nuevo traslado</a>
+</div>
 
 </body>
 </html>
