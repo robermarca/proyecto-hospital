@@ -8,7 +8,7 @@ require_once __DIR__ . '/../app/config/conexion.php';
 $id_paciente = $_POST['id_paciente'] ?? '';
 $id_origen = $_POST['id_origen'] ?? '';
 $id_destino = $_POST['id_destino'] ?? '';
-$facultativo_solicitante = trim($_POST['facultativo_solicitante'] ?? '');
+$id_facultativo = $_POST['id_facultativo'] ?? '';
 $prueba_solicitada = trim($_POST['prueba_solicitada'] ?? '');
 
 $errores = [];
@@ -25,12 +25,12 @@ if ($id_destino === '' || !ctype_digit($id_destino)) {
     $errores[] = "Destino no válido.";
 }
 
-if ($id_origen !== '' && $id_destino !== '' && $id_origen === $id_destino) {
-    $errores[] = "El origen y el destino no pueden ser el mismo.";
+if ($id_facultativo === '' || !ctype_digit($id_facultativo)) {
+    $errores[] = "Facultativo no válido.";
 }
 
-if ($facultativo_solicitante === '') {
-    $errores[] = "Debes indicar el facultativo solicitante.";
+if ($id_origen !== '' && $id_destino !== '' && $id_origen === $id_destino) {
+    $errores[] = "El origen y el destino no pueden ser el mismo.";
 }
 
 if ($prueba_solicitada !== '' && mb_strlen($prueba_solicitada) > 100) {
@@ -68,26 +68,26 @@ if (!empty($errores)) {
     exit;
 }
 
-$id_usuario = null;
+$id_celador = null;
 $estado = 'pendiente';
 
 $sql = "INSERT INTO traslados (
             id_paciente,
             id_origen,
             id_destino,
-            id_usuario,
-            facultativo_solicitante,
             prueba_solicitada,
             estado,
+            id_celador,
+            id_facultativo,
             fecha_solicitud
         ) VALUES (
             :id_paciente,
             :id_origen,
             :id_destino,
-            :id_usuario,
-            :facultativo_solicitante,
             :prueba_solicitada,
             :estado,
+            :id_celador,
+            :id_facultativo,
             NOW()
         )";
 
@@ -96,10 +96,10 @@ $stmt->execute([
     ':id_paciente' => (int)$id_paciente,
     ':id_origen' => (int)$id_origen,
     ':id_destino' => (int)$id_destino,
-    ':id_usuario' => $id_usuario,
-    ':facultativo_solicitante' => $facultativo_solicitante,
     ':prueba_solicitada' => $prueba_solicitada,
-    ':estado' => $estado
+    ':estado' => $estado,
+    ':id_celador' => $id_celador,
+    ':id_facultativo' => (int)$id_facultativo
 ]);
 ?>
 

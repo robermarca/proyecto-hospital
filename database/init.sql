@@ -15,6 +15,7 @@ CREATE TABLE usuarios (
     apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(120) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
+    rol ENUM ('celador', 'facultativo') NOT NULL,
     id_area INT NULL,
     CONSTRAINT fk_usuario_area
         FOREIGN KEY (id_area)
@@ -49,16 +50,18 @@ CREATE TABLE traslados (
     id_paciente INT NOT NULL,
     id_origen INT NOT NULL,
     id_destino INT NOT NULL,
-    id_usuario INT NULL,
+    id_celador INT NULL,
+    id_facultativo INT NOT NULL,
     facultativo_solicitante VARCHAR(100),
-    estado VARCHAR(50) NOT NULL DEFAULT 'pendiente',
+    estado ENUM ('pendiente', 'en_curso', 'completado', 'cancelado', 'pospuesto') NOT NULL DEFAULT 'pendiente',
     fecha_solicitud DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     prueba_solicitada VARCHAR(100) NULL,
 
     CONSTRAINT fk_traslado_paciente
         FOREIGN KEY (id_paciente)
         REFERENCES pacientes(id_paciente)
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
 
     CONSTRAINT fk_traslado_origen
         FOREIGN KEY (id_origen)
@@ -72,10 +75,16 @@ CREATE TABLE traslados (
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
-    CONSTRAINT fk_traslado_usuario
-        FOREIGN KEY (id_usuario)
+    CONSTRAINT fk_traslado_celador
+        FOREIGN KEY (id_celador)
         REFERENCES usuarios(id_usuario)
         ON DELETE SET NULL
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_traslado_facultativo
+        FOREIGN KEY (id_facultativo)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
 

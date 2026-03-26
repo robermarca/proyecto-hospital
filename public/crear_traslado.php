@@ -5,7 +5,6 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../app/config/conexion.php';
 
-
 $sqlPacientes = "SELECT id_paciente, nombre, apellidos FROM pacientes ORDER BY apellidos, nombre";
 $stmtPacientes = $conexion->query($sqlPacientes);
 $pacientes = $stmtPacientes->fetchAll(PDO::FETCH_ASSOC);
@@ -14,13 +13,22 @@ $sqlUbicaciones = "SELECT id_ubicacion, nombre, planta FROM ubicaciones ORDER BY
 $stmtUbicaciones = $conexion->query($sqlUbicaciones);
 $ubicaciones = $stmtUbicaciones->fetchAll(PDO::FETCH_ASSOC);
 
+$sqlFacultativos = "SELECT id_usuario, nombre, apellidos 
+                    FROM usuarios 
+                    WHERE rol = 'facultativo'
+                    ORDER BY apellidos, nombre";
+$stmtFacultativos = $conexion->query($sqlFacultativos);
+$facultativos = $stmtFacultativos->fetchAll(PDO::FETCH_ASSOC);
+
 $id_paciente_seleccionado = $_POST['id_paciente'] ?? '';
 $id_origen_seleccionado = $_POST['id_origen'] ?? '';
 $id_destino_seleccionado = $_POST['id_destino'] ?? '';
+$id_facultativo_seleccionado = $_POST['id_facultativo'] ?? '';
 
 $texto_paciente = '';
 $texto_origen = '';
 $texto_destino = '';
+$texto_facultativo = '';
 
 foreach ($pacientes as $p) {
     if ((string)$p['id_paciente'] === (string)$id_paciente_seleccionado) {
@@ -38,6 +46,13 @@ foreach ($ubicaciones as $u) {
         $texto_destino = $u['nombre'] . ' - Planta ' . $u['planta'];
     }
 }
+
+foreach ($facultativos as $f) {
+    if ((string)$f['id_usuario'] === (string)$id_facultativo_seleccionado) {
+        $texto_facultativo = $f['apellidos'] . ', ' . $f['nombre'];
+        break;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -53,10 +68,10 @@ foreach ($ubicaciones as $u) {
     <form method="POST" action="confirmar_traslado.php">
         <div class="campo">
             <label for="buscar_paciente">Paciente</label>
-            <input type="text" id="buscar_paciente" name="buscar_paciente" placeholder="escribe nombre o apellidos" autocomplete="off" required value="<?= htmlspecialchars($texto_paciente) ?>">
+            <input type="text" id="buscar_paciente" name="buscar_paciente" placeholder="Escribe nombre o apellidos" autocomplete="off" required value="<?= htmlspecialchars($texto_paciente) ?>">
 
             <input type="hidden" name="id_paciente" id="id_paciente" value="<?= htmlspecialchars($id_paciente_seleccionado) ?>">
-             <div id="lista_pacientes" class="lista-sugerencias"></div>
+            <div id="lista_pacientes" class="lista-sugerencias"></div>
         </div>
 
         <br>
@@ -88,22 +103,35 @@ foreach ($ubicaciones as $u) {
                 name="prueba_solicitada"
                 id="prueba_solicitada"
                 maxlength="100"
-                placeholder ="Ej: TAC, scanner, ecocardiograma..."
+                placeholder="Ej: TAC, escáner, ecocardiograma..."
                 value="<?= htmlspecialchars($_POST['prueba_solicitada'] ?? '') ?>"
             >
         </div>
+
         <br>
 
         <div class="campo">
-            <label for="facultativo_solicitante">Facultativo solicitante:</label>
-            <input
-                type="text"
-                name="facultativo_solicitante"
-                id="facultativo_solicitante"
-                value="<?= htmlspecialchars($_POST['facultativo_solicitante'] ?? '') ?>"
+            <label for="buscar_facultativo">Facultativo solicitante</label>
+
+            <input 
+                type="text" 
+                id="buscar_facultativo" 
+                name="buscar_facultativo" 
+                placeholder="Escribe nombre o apellidos"
+                autocomplete="off"
                 required
+                value="<?= htmlspecialchars($texto_facultativo) ?>""
             >
-        </div>
+
+            <input 
+                type="hidden" 
+                name="id_facultativo" 
+                id="id_facultativo" 
+                value="<?= htmlspecialchars($_POST['id_facultativo'] ?? '') ?>"
+            >
+
+        <div id="lista_facultativos" class="lista-sugerencias"></div>
+    </div>
 
         <br>
 
@@ -122,6 +150,7 @@ foreach ($ubicaciones as $u) {
             ];
         }, $pacientes)
     ); ?>;
+
     const ubicaciones = <?= json_encode(
         array_map(function($u){
             return [
@@ -129,6 +158,15 @@ foreach ($ubicaciones as $u) {
                 'nombre' => $u['nombre'] . ' - Planta ' . $u['planta']
             ];
         }, $ubicaciones)
+    ); ?>;
+
+    const facultativos = <?= json_encode(
+    array_map(function($f) {
+        return [
+            'id' => $f['id_usuario'],
+            'nombre' => $f['apellidos'] . ', ' . $f['nombre']
+        ];
+    }, $facultativos)
     ); ?>;
     </script>
     <script src="script.js"></script>

@@ -6,10 +6,31 @@ body {
 }
 
 
+.header-titulo {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-titulo h1 {
+    flex: 1;
+    text-align: center;
+}
+
+.logo {
+    position: absolute;
+    right: 15px;
+    top: 25px;
+    height: 50%;
+    z-index: 2000;
+}
 
 h1 {
     position: sticky;
-    top: 0;
+    top: 10px;
     z-index: 1000;
     color: #e6eaf5;
     background-color: #0959ca;
@@ -21,10 +42,12 @@ h1 {
 }
 
 
+
 .card {
+    position: relative;
     background: white;
     padding: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
     border-radius: 10px;
     box-shadow: 0 2px 6px #142946;
 }
@@ -51,8 +74,6 @@ h1 {
     border-left: 15px solid blue;
 }
 
-
-
 .hora {
     font-size: 1.3em;
     font-weight: bold;
@@ -68,6 +89,7 @@ h1 {
     color: #555;
     font-size: 0.95em;
 }
+
 
 
 form {
@@ -89,7 +111,8 @@ form {
     color: #333;
 }
 
-.campo input[type="text"] {
+.campo input[type="text"],
+.campo select {
     width: 100%;
     padding: 10px 12px;
     border: 2px solid #caced2;
@@ -99,10 +122,11 @@ form {
     box-sizing: border-box;
 }
 
-.campo input[type="text"]:focus {
+.campo input[type="text"]:focus,
+.campo select:focus {
     outline: none;
     border-color: #4c4c4d;
-    box-shadow: 0 2px 6px #142946
+    box-shadow: 0 2px 6px #142946;
 }
 
 
@@ -120,7 +144,6 @@ button {
 button:hover {
     background-color: #3b3a3a;
 }
-
 
 
 .errores {
@@ -167,7 +190,7 @@ button:hover {
     background: #f2f5f9;
 }
 
-/* ENLACES */
+
 
 a {
     color: #172a5c;
@@ -184,7 +207,7 @@ a:hover {
     margin-right: 10px;
     margin-top: 10px;
     padding: 10px 14px;
-    background-color: #4d4c4c;
+    background-color: #04224b;
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -192,15 +215,123 @@ a:hover {
 }
 
 .boton-enlace:hover {
-    background-color: #2f2f2f;
+    background-color: #7ba9ea;
+    color: #04224b;
+    text-decoration: none;
 }
+
 
 .barra-inferior {
     position: sticky;
-    bottom: 0;
-    background: #d8d9db;
+    bottom: 20px;
+    background: #c5d3f095;
+    border-radius: 10px;
     padding: 12px;
     text-align: center;
-    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
-    z-index: 1000;
+    box-shadow: 0 -2px 6px #0959ca;
+    z-index: 500;
+}
+
+
+
+.acciones-traslado {
+    display: grid;
+    grid-template-columns: 150px 120px 120px;
+    gap: 10px;
+    align-items: center;
+    justify-content: start;
+    margin-top: 14px;
+
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: auto;
+    max-width: 100%;
+}
+
+.acciones-traslado .select-estado {
+    width: 150px;
+    height: 40px;
+    font-weight: bold;
+    padding: 0 10px;
+    border: 1px solid #999;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.acciones-traslado .select-estado:focus {
+    outline: none;
+    border-color: #0959ca;
+    box-shadow: 0 0 5px rgba(9, 89, 202, 0.35);
+}
+
+.acciones-traslado .boton-accion {
+    width: 120px;
+    height: 40px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.acciones-traslado .boton-accion.actualizar {
+    background-color: #0959ca !important;
+}
+
+.acciones-traslado .boton-accion.actualizar:hover {
+    background-color: #06234d !important;
+}
+
+.acciones-traslado .boton-accion.cancelar {
+    background-color: #e40606 !important;
+}
+
+.acciones-traslado .boton-accion.cancelar:hover {
+    background-color: #800000 !important;
+}
+
+
+.estado-texto {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+
+
+.estado-texto.pendiente {
+    background-color: #ffd6d6;
+    color: #b30000;
+}
+
+.estado-texto.en_curso {
+    background-color: #ffe7cc;
+    color: #cc7000;
+}
+
+.estado-texto.completado {
+    background-color: #d6f5d6;
+    color: #1e7a1e;
+}
+
+.estado-texto.cancelado {
+    background-color: #e0e0e0;
+    color: #555;
+}
+
+.estado-texto.pospuesto {
+    background-color: #d6e4ff;
+    color: #1f4fc0;
 }
