@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo plano hospital sobre PNG</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f5;
+      margin: 0;
+      padding: 20px;
+      color: #1f2937;
+    }
+
+    .contenedor {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .panel {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .controles,
+    .leyenda,
+    .info-extra {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .controles label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    .controles select,
+    .controles button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .controles button {
+      background: #0b5ed7;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .controles button:hover {
+      background: #094db1;
+    }
+
+    .resultado {
+      margin-top: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+
+    .info-extra {
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .plano-wrap {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      overflow: auto;
+    }
+
+    .plano {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .plano img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .plano svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 12px;
+      overflow: visible;
+    }
+
+    .leyenda {
+      margin-top: 20px;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .item-leyenda {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .muestra {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .linea-muestra {
+      width: 24px;
+      height: 4px;
+      border-radius: 2px;
+      background: #ef4444;
+      display: inline-block;
+    }
+
+    @media (max-width: 900px) {
+      .panel {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Demo de rutas sobre plano PNG</h1>
+    <p>El PNG actúa como fondo. El SVG de encima dibuja solo nodos y recorridos.</p>
+
+    <div class="panel">
+      <div>
+        <div class="controles">
+          <label for="origen">Origen</label>
+          <select id="origen"></select>
+
+          <label for="destino">Destino</label>
+          <select id="destino"></select>
+
+          <button id="btnCalcular">Calcular ruta</button>
+
+          <div class="resultado" id="resultado">
+            Selecciona un origen y un destino para ver el recorrido.
+          </div>
+        </div>
+
+        <div class="info-extra">
+          <strong>Importante:</strong><br>
+          Las coordenadas de ejemplo seguramente no coincidirán con tu PNG.<br>
+          Eso es normal. Luego solo tendrás que ir ajustando los valores <strong>x</strong> e <strong>y</strong>.
+        </div>
+      </div>
+
+      <div class="plano-wrap">
+        <div class="plano">
+          <img src="img001.png" alt="Plano del hospital">
+
+          <svg id="svgPlano" viewBox="0 0 1000 520" preserveAspectRatio="none">
+            <g id="capaBase"></g>
+            <g id="capaRuta"></g>
+            <g id="capaNodos"></g>
+            <g id="capaEtiquetas"></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="leyenda">
+      <div class="item-leyenda"><span class="muestra" style="background:#22c55e"></span> Origen</div>
+      <div class="item-leyenda"><span class="muestra" style="background:#3b82f6"></span> Destino</div>
+      <div class="item-leyenda"><span class="muestra" style="background:#111827"></span> Nodo intermedio</div>
+      <div class="item-leyenda"><span class="muestra" style="background:#7c3aed"></span> Ascensor</div>
+      <div class="item-leyenda"><span class="muestra" style="background:#f59e0b"></span> Especialidad</div>
+      <div class="item-leyenda"><span class="linea-muestra"></span> Ruta calculada</div>
+    </div>
+  </div>
+
+  <script>
+    const nodos = {
+      hab101: { id: 'hab101', nombre: 'Habitación 101', tipo: 'habitacion', x: 135, y: 130 },
+      hab102: { id: 'hab102', nombre: 'Habitación 102', tipo: 'habitacion', x: 235, y: 130 },
+      hab103: { id: 'hab103', nombre: 'Habitación 103', tipo: 'habitacion', x: 135, y: 250 },
+      hab104: { id: 'hab104', nombre: 'Habitación 104', tipo: 'habitacion', x: 235, y: 250 },
+
+      hab201: { id: 'hab201', nombre: 'Habitación 201', tipo: 'habitacion', x: 435, y: 130 },
+      hab202: { id: 'hab202', nombre: 'Habitación 202', tipo: 'habitacion', x: 545, y: 130 },
+      hab203: { id: 'hab203', nombre: 'Habitación 203', tipo: 'habitacion', x: 435, y: 250 },
+      hab204: { id: 'hab204', nombre: 'Habitación 204', tipo: 'habitacion', x: 545, y: 250 },
+
+      hab301: { id: 'hab301', nombre: 'Habitación 301', tipo: 'habitacion', x: 765, y: 130 },
+      hab302: { id: 'hab302', nombre: 'Habitación 302', tipo: 'habitacion', x: 865, y: 130 },
+      hab303: { id: 'hab303', nombre: 'Habitación 303', tipo: 'habitacion', x: 765, y: 250 },
+      hab304: { id: 'hab304', nombre: 'Habitación 304', tipo: 'habitacion', x: 865, y: 250 },
+
+      rayos: { id: 'rayos', nombre: 'Rayos', tipo: 'especialidad', x: 180, y: 390 },
+      neumologia: { id: 'neumologia', nombre: 'Neumología', tipo: 'especialidad', x: 480, y: 390 },
+      cardiologia: { id: 'cardiologia', nombre: 'Cardiología', tipo: 'especialidad', x: 820, y: 390 },
+
+      cruceIzqSup: { id: 'cruceIzqSup', nombre: 'Cruce izq. superior', tipo: 'pasillo', x: 320, y: 150 },
+      cruceIzqMed: { id: 'cruceIzqMed', nombre: 'Cruce izq. medio', tipo: 'pasillo', x: 320, y: 270 },
+      cruceIzqInf: { id: 'cruceIzqInf', nombre: 'Cruce izq. inferior', tipo: 'pasillo', x: 320, y: 410 },
+
+      cruceDerSup: { id: 'cruceDerSup', nombre: 'Cruce der. superior', tipo: 'pasillo', x: 680, y: 150 },
+      cruceDerMed: { id: 'cruceDerMed', nombre: 'Cruce der. medio', tipo: 'pasillo', x: 680, y: 270 },
+      cruceDerInf: { id: 'cruceDerInf', nombre: 'Cruce der. inferior', tipo: 'pasillo', x: 680, y: 410 },
+
+      ascensores: { id: 'ascensores', nombre: 'Ascensores', tipo: 'ascensor', x: 535, y: 410 }
+    };
+
+    const conexiones = [
+      ['hab101', 'hab102'],
+      ['hab101', 'cruceIzqSup'],
+      ['hab102', 'cruceIzqSup'],
+      ['hab103', 'hab104'],
+      ['hab103', 'cruceIzqMed'],
+      ['hab104', 'cruceIzqMed'],
+
+      ['hab201', 'hab202'],
+      ['hab201', 'cruceIzqSup'],
+      ['hab202', 'cruceDerSup'],
+      ['hab203', 'hab204'],
+      ['hab203', 'cruceIzqMed'],
+      ['hab204', 'cruceDerMed'],
+
+      ['hab301', 'hab302'],
+      ['hab301', 'cruceDerSup'],
+      ['hab302', 'cruceDerSup'],
+      ['hab303', 'hab304'],
+      ['hab303', 'cruceDerMed'],
+      ['hab304', 'cruceDerMed'],
+
+      ['rayos', 'cruceIzqInf'],
+      ['neumologia', 'ascensores'],
+      ['cardiologia', 'cruceDerInf'],
+
+      ['cruceIzqSup', 'cruceIzqMed'],
+      ['cruceIzqMed', 'cruceIzqInf'],
+      ['cruceDerSup', 'cruceDerMed'],
+      ['cruceDerMed', 'cruceDerInf'],
+
+      ['cruceIzqSup', 'cruceDerSup'],
+      ['cruceIzqMed', 'cruceDerMed'],
+      ['cruceIzqInf', 'ascensores'],
+      ['ascensores', 'cruceDerInf']
+    ];
+
+    const grafo = {};
+
+    function distancia(a, b) {
+      const dx = nodos[a].x - nodos[b].x;
+      const dy = nodos[a].y - nodos[b].y;
+      return Math.round(Math.sqrt(dx * dx + dy * dy));
+    }
+
+    for (const id in nodos) {
+      grafo[id] = [];
+    }
+
+    conexiones.forEach(([a, b]) => {
+      const d = distancia(a, b);
+      grafo[a].push({ destino: b, distancia: d });
+      grafo[b].push({ destino: a, distancia: d });
+    });
+
+    function dijkstra(inicio, fin) {
+      const distancias = {};
+      const anteriores = {};
+      const visitados = new Set();
+
+      for (const nodo in grafo) {
+        distancias[nodo] = Infinity;
+        anteriores[nodo] = null;
+      }
+
+      distancias[inicio] = 0;
+
+      while (visitados.size < Object.keys(grafo).length) {
+        let actual = null;
+        let menor = Infinity;
+
+        for (const nodo in distancias) {
+          if (!visitados.has(nodo) && distancias[nodo] < menor) {
+            menor = distancias[nodo];
+            actual = nodo;
+          }
+        }
+
+        if (actual === null) break;
+        if (actual === fin) break;
+
+        visitados.add(actual);
+
+        for (const vecino of grafo[actual]) {
+          const nuevaDist = distancias[actual] + vecino.distancia;
+          if (nuevaDist < distancias[vecino.destino]) {
+            distancias[vecino.destino] = nuevaDist;
+            anteriores[vecino.destino] = actual;
+          }
+        }
+      }
+
+      const ruta = [];
+      let paso = fin;
+
+      while (paso) {
+        ruta.unshift(paso);
+        paso = anteriores[paso];
+      }
+
+      return {
+        ruta,
+        distanciaTotal: distancias[fin]
+      };
+    }
+
+    const selectOrigen = document.getElementById('origen');
+    const selectDestino = document.getElementById('destino');
+    const btnCalcular = document.getElementById('btnCalcular');
+    const resultado = document.getElementById('resultado');
+    const svgPlano = document.getElementById('svgPlano');
+    const capaBase = document.getElementById('capaBase');
+    const capaRuta = document.getElementById('capaRuta');
+    const capaNodos = document.getElementById('capaNodos');
+    const capaEtiquetas = document.getElementById('capaEtiquetas');
+
+    const puntosSeleccionables = Object.values(nodos).filter(n =>
+      n.tipo === 'habitacion' || n.tipo === 'especialidad'
+    );
+
+    puntosSeleccionables.forEach(nodo => {
+      const option1 = document.createElement('option');
+      option1.value = nodo.id;
+      option1.textContent = nodo.nombre;
+      selectOrigen.appendChild(option1);
+
+      const option2 = document.createElement('option');
+      option2.value = nodo.id;
+      option2.textContent = nodo.nombre;
+      selectDestino.appendChild(option2);
+    });
+
+    selectOrigen.value = 'hab101';
+    selectDestino.value = 'rayos';
+
+    function crearLinea(x1, y1, x2, y2, color, grosor, opacidad = 1) {
+      const linea = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      linea.setAttribute('x1', x1);
+      linea.setAttribute('y1', y1);
+      linea.setAttribute('x2', x2);
+      linea.setAttribute('y2', y2);
+      linea.setAttribute('stroke', color);
+      linea.setAttribute('stroke-width', grosor);
+      linea.setAttribute('stroke-linecap', 'round');
+      linea.setAttribute('opacity', opacidad);
+      return linea;
+    }
+
+    function crearCirculo(cx, cy, r, color, borde = '#ffffff', grosorBorde = 2) {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', cx);
+      circle.setAttribute('cy', cy);
+      circle.setAttribute('r', r);
+      circle.setAttribute('fill', color);
+      circle.setAttribute('stroke', borde);
+      circle.setAttribute('stroke-width', grosorBorde);
+      return circle;
+    }
+
+    function crearTexto(x, y, texto) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', x);
+      t.setAttribute('y', y);
+      t.setAttribute('font-size', '13');
+      t.setAttribute('font-family', 'Arial, sans-serif');
+      t.setAttribute('fill', '#111827');
+      t.textContent = texto;
+      return t;
+    }
+
+    function dibujarTodo(ruta = [], origen = null, destino = null) {
+      capaBase.innerHTML = '';
+      capaRuta.innerHTML = '';
+      capaNodos.innerHTML = '';
+      capaEtiquetas.innerHTML = '';
+
+      conexiones.forEach(([a, b]) => {
+        const lineaBase = crearLinea(
+          nodos[a].x,
+          nodos[a].y,
+          nodos[b].x,
+          nodos[b].y,
+          '#94a3b8',
+          4,
+          0.55
+        );
+        capaBase.appendChild(lineaBase);
+      });
+
+      for (let i = 0; i < ruta.length - 1; i++) {
+        const a = nodos[ruta[i]];
+        const b = nodos[ruta[i + 1]];
+        const lineaRuta = crearLinea(a.x, a.y, b.x, b.y, '#ef4444', 7, 0.95);
+        capaRuta.appendChild(lineaRuta);
+      }
+
+      Object.values(nodos).forEach(nodo => {
+        let color = '#111827';
+        let radio = 8;
+
+        if (nodo.id === origen) {
+          color = '#22c55e';
+          radio = 10;
+        } else if (nodo.id === destino) {
+          color = '#3b82f6';
+          radio = 10;
+        } else if (nodo.tipo === 'ascensor') {
+          color = '#7c3aed';
+          radio = 9;
+        } else if (nodo.tipo === 'especialidad') {
+          color = '#f59e0b';
+          radio = 9;
+        } else if (nodo.tipo === 'pasillo') {
+          color = '#111827';
+          radio = 6;
+        }
+
+        const circle = crearCirculo(nodo.x, nodo.y, radio, color);
+        capaNodos.appendChild(circle);
+
+        if (nodo.tipo !== 'pasillo') {
+          const texto = crearTexto(nodo.x + 12, nodo.y - 10, nodo.nombre);
+          capaEtiquetas.appendChild(texto);
+        }
+      });
+    }
+
+    function calcularYMostrar() {
+      const origen = selectOrigen.value;
+      const destino = selectDestino.value;
+
+      if (origen === destino) {
+        resultado.innerHTML = 'El origen y el destino son el mismo punto.';
+        dibujarTodo([], origen, destino);
+        return;
+      }
+
+      const { ruta, distanciaTotal } = dijkstra(origen, destino);
+      dibujarTodo(ruta, origen, destino);
+
+      const nombres = ruta.map(id => nodos[id].nombre);
+
+      resultado.innerHTML = `
+        <strong>Ruta calculada:</strong><br>
+        ${nombres.join(' → ')}<br><br>
+        <strong>Distancia aproximada:</strong> ${distanciaTotal} unidades
+      `;
+    }
+
+    btnCalcular.addEventListener('click', calcularYMostrar);
+
+    svgPlano.addEventListener('click', (e) => {
+      const rect = svgPlano.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width * 1000).toFixed(0);
+      const y = ((e.clientY - rect.top) / rect.height * 520).toFixed(0);
+      console.log(`x: ${x}, y: ${y}`);
+    });
+
+    dibujarTodo([], selectOrigen.value, selectDestino.value);
+  </script>
+</body>
+</html>

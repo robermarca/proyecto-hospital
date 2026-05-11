@@ -63,7 +63,10 @@ foreach ($facultativos as $f) {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Nuevo traslado</h1>
+    <div class="header-titulo">
+        <h1>Nuevo traslado</h1>
+        <img src="imagenes/logo.png" alt="CelCare" class="logo">
+    </div>
 
     <form method="POST" action="confirmar_traslado.php">
         <div class="campo">

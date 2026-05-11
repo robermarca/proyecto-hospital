@@ -335,3 +335,12 @@ a:hover {
     background-color: #d6e4ff;
     color: #1f4fc0;
 }
+
+.mensaje-exito{
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
