@@ -16,45 +16,42 @@ unset($_SESSION['errores_login']);
 <head>
     <meta charset="UTF-8">
     <title>Login - CelCare</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
+<body class="login-body">
 
-    <h1>Iniciar sesión</h1>
+    <main class="login-page">
 
-    <?php if ($mensaje): ?>
-        <div class="mensaje-exito">
-            <?= htmlspecialchars($mensaje) ?>
-        </div>
-    <?php endif; ?>
+        <section class="brand-panel">
+            <img src="../assets/img/logo-celcare.png" class="logo-celcare" alt="Logo CelCare">
 
-    <?php if (!empty($errores)): ?>
-        <div class="mensaje-error">
-            <ul>
-                <?php foreach ($errores as $error): ?>
-                    <li><?= htmlspecialchars($error) ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
+            <h1>CelCare</h1>
+            <p>Gestión inteligente de traslados hospitalarios</p>
+        </section>
 
-    <form action="validar_login.php" method="POST">
+        <section class="login-card">
+            <h2>Iniciar sesión</h2>
 
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email">
+            <form action="validar_login.php" method="POST">
+                <label>Email</label>
+                <input type="email" name="email">
 
-        <label for="password">Contraseña</label>
-        <input type="password" name="password" id="password" minlength="8"
-    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
-    title="Mínimo 8 caracteres, una mayúscula, una minúscula y un número">
+                <label>Contraseña</label>
+                <input type="password" name="password">
 
-        <button type="submit">Iniciar sesión</button>
+                <button type="submit">Entrar</button>
+            </form>
 
-    </form>
+            <p>¿No tienes cuenta? <a href="registro.php">Regístrate</a></p>
+        </section>
 
-    <p>
-        ¿No tienes cuenta?
-        <a href="registro.php">Regístrate</a>
-    </p>
+        <section class="login-features">
+            <div>Cercanía</div>
+            <div>Cuidado</div>
+            <div>En movimiento</div>
+        </section>
+
+    </main>
 
 </body>
 </html>

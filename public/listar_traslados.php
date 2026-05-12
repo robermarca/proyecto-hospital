@@ -3,7 +3,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+require_once __DIR__ . '/auth/auth.php';
 require_once "../app/config/conexion.php";
+
+$usuario = $_SESSION['usuario'];
+$rol = $usuario['rol'];
 
 $sql = "
 SELECT 
@@ -83,7 +87,8 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <br><br>
 
-            <?php if ($t['estado'] !== 'cancelado' && $t['estado'] !== 'completado'): ?>
+            <?php if ($rol === 'celador' && $t['estado'] !== 'cancelado' && $t['estado'] !== 'completado'
+): ?>
                 <form class="acciones-traslado" method="POST">
 
                     <input type="hidden" name="id_traslado" value="<?= htmlspecialchars($t['id_traslado']) ?>">
@@ -123,9 +128,11 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php endif; ?>
 
 <br>
-<div class="barra-inferior">
-    <a href="crear_traslado.php" class="boton-enlace">+ Nuevo traslado</a>
-</div>
+<?php if ($rol === 'facultativo'): ?>
+    <div class="barra-inferior">
+        <a href="crear_traslado.php" class="boton-enlace">+ Nuevo traslado</a>
+    </div>
+<?php endif; ?>
 
 </body>
 </html>

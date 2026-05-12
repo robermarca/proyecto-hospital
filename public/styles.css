@@ -344,3 +344,86 @@ a:hover {
     border-radius: 8px;
     margin-bottom: 20px;
 }
+
+/* LOGIN*/
+.login-body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(120, 200, 255, 0.35), transparent 30%),
+        radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.25), transparent 25%),
+        linear-gradient(135deg, #063b7a, #0c74c9, #7fd3ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-page {
+    width: min(420px, 90%);
+    text-align: center;
+    color: white;
+}
+
+.logo-celcare {
+    width: 150px;
+    filter: drop-shadow(0 12px 25px rgba(0,0,0,0.35));
+}
+
+.brand-panel h1 {
+    font-size: 2.4rem;
+    margin: 10px 0 4px;
+}
+
+.brand-panel p {
+    opacity: 0.9;
+    margin-bottom: 25px;
+}
+
+.login-card {
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 26px;
+    padding: 28px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+}
+
+.login-card input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    margin: 8px 0 16px;
+    border: none;
+    border-radius: 14px;
+}
+
+.login-card button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff, #d9f3ff);
+    color: #06477d;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-card a {
+    color: white;
+    font-weight: bold;
+}
+
+.login-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.login-features div {
+    background: rgba(255,255,255,0.16);
+    border-radius: 18px;
+    padding: 12px 8px;
+    font-size: 0.85rem;
+}

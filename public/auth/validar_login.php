@@ -53,19 +53,25 @@ try {
         'rol' => $usuario['rol']
     ];
 
+    $_SESSION['id_usuario'] = $usuario['id_usuario'];
+
     if ($usuario['rol'] === 'facultativo') {
 
-    header('Location: ../facultativo/panel_facultativo.php');
+    header('Location: ../crear_traslado.php');
     exit;
 }
 
 if ($usuario['rol'] === 'celador') {
 
-    header('Location: ../celador/panel_celador.php');
+    header('Location: ../listar_traslados.php');
     exit;
 
 
 } 
+
+header('Location: ../index.php');
+exit;
+
 }catch (PDOException $e) {
     die('Error al iniciar sesión: ' . $e->getMessage());
 }
