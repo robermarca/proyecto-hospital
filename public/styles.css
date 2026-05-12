@@ -1,4 +1,4 @@
-body {
+/*body {
     font-family: Arial, sans-serif;
     background: #d8d9db;
     padding: 20px;
@@ -345,85 +345,446 @@ a:hover {
     margin-bottom: 20px;
 }
 
-/* LOGIN*/
-.login-body {
+/* PANELES*/
+
+body.dashboard-page {
     min-height: 100vh;
     margin: 0;
-    font-family: Arial, sans-serif;
-    background:
-        radial-gradient(circle at 20% 20%, rgba(120, 200, 255, 0.35), transparent 30%),
-        radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.25), transparent 25%),
-        linear-gradient(135deg, #063b7a, #0c74c9, #7fd3ff);
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url("imagenes/fondo.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #0d4ea3;
+    color: white;
+    overflow-x: hidden;
+}
+
+.dashboard-wrapper {
+    min-height: 100vh;
     display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    padding: 100px 20px 70px;
+}
+.dashboard-glow {
+    position: absolute;
+    width: 550px;
+    height: 700px;
+    background: rgba(183, 206, 212, 0.38);
+    filter: blur(45px);
+    border-radius: 999px;
+    bottom: 140px;
+    z-index: 1;
+}
+
+.dashboard-brand {
+    text-align: center;
+    margin-bottom: 44px;
+}
+
+.dashboard-logo {
+    width: 400px;
+    max-width: 82vw;
+    margin-top: 20px;
+    filter:
+        drop-shadow(0 26px 36px rgba(0, 0, 0, 0.48))
+        drop-shadow(0 0 34px rgba(72, 220, 240, 0.22));
+}
+
+.dashboard-card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 620px;
+    background: linear-gradient(180deg,rgba(38, 77, 144, 0.96),
+        rgba(13, 28, 58, 0.98)
+    );
+    border-radius: 30px;
+    padding: 42px 52px 40px;
+    text-align: center;
+    box-shadow:
+        0 35px 70px rgba(0, 10, 40, 0.80),
+        0 12px 22px rgba(0, 153, 255, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+
+.dashboard-card h1 {
+    font-size: 2.7rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: rgb(222, 225, 227);
+    text-shadow:
+        0 6px 10px rgba(0, 0, 0, 0.32),
+        0 2px 2px rgba(255, 255, 255, 0.12);
+}
+
+.dashboard-saludo {
+    font-size: 1.15rem;
+    line-height: 1.4;
+    margin-bottom: 34px;
+    color: rgba(201, 225, 240, 0.92);
+}
+
+.dashboard-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.dashboard-btn {
+    width: 100%;
+    min-height: 62px;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    border-radius: 13px;
+    text-decoration: none;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: white;
+    border: 2px solid #77b0be;
+    background: rgba(255, 255, 255, 0.02);
+    transition: 0.25s;
+}
+
+.dashboard-btn.principal {
+    background: linear-gradient(90deg, #77b0be, #2797b4);
+    border: none;
+    box-shadow: 0 10px 24px rgba(0, 255, 255, 0.18);
+}
+
+.dashboard-btn.salir {
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: #77b0be;
+    color: #9bddee;
+}
+
+.dashboard-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+@media (max-width: 700px) {
+
+    .dashboard-wrapper {
+        padding: 70px 16px 60px;
+    }
+
+    .dashboard-brand {
+        margin-bottom: 42px;
+    }
+
+    .dashboard-logo {
+        width: 360px;
+        max-width: 92vw;
+    }
+
+    .dashboard-card {
+        max-width: 470px;
+        border-radius: 28px;
+        padding: 36px 24px 34px;
+    }
+
+    .dashboard-card h1 {
+        font-size: 2.2rem;
+    }
+
+    .dashboard-saludo {
+        font-size: 1.05rem;
+        margin-bottom: 30px;
+    }
+
+    .dashboard-actions {
+        gap: 16px;
+    }
+
+    .dashboard-btn {
+        min-height: 58px;
+        font-size: 1.05rem;
+    }
+
+    .dashboard-card::after {
+        left: 12%;
+        right: 12%;
+        bottom: -12px;
+    }
+}
+/* LOGIN */
+
+body.login-page {
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+
+    background-image: url("imagenes/fondo.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    background-color: #0d4ea3;
+
+    color: white;
+
+    position: relative;
+    overflow-x: hidden;
+}
+
+.login-wrapper {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 50px 20px;
+
+    position: relative;
+    z-index: 2;
+}
+
+.login-brand {
+    text-align: center;
+
+    margin-bottom: 45px;
+
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
-.login-page {
-    width: min(420px, 90%);
-    text-align: center;
+.login-logo {
+    width: 520px;
+    max-width: 92%;
+
+    margin-bottom: 12px;
+
+    filter:
+        drop-shadow(0 18px 30px rgba(0, 0, 0, 0.35))
+        drop-shadow(0 0 22px rgba(129, 194, 224, 0.16));
+
+    transition: 0.3s ease;
+}
+
+.login-frase {
+    margin-top: 12px;
+
+    font-size: 1.55rem;
+    line-height: 1.5;
+
+    font-weight: 500;
+
     color: white;
-}
 
-.logo-celcare {
-    width: 150px;
-    filter: drop-shadow(0 12px 25px rgba(0,0,0,0.35));
-}
-
-.brand-panel h1 {
-    font-size: 2.4rem;
-    margin: 10px 0 4px;
-}
-
-.brand-panel p {
-    opacity: 0.9;
-    margin-bottom: 25px;
+    text-shadow:
+        0 5px 12px rgba(0, 35, 80, 0.5);
 }
 
 .login-card {
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,0.35);
-    border-radius: 26px;
-    padding: 28px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
-}
-
-.login-card input {
     width: 100%;
-    box-sizing: border-box;
-    padding: 13px 15px;
-    margin: 8px 0 16px;
-    border: none;
-    border-radius: 14px;
+    max-width: 470px;
+    margin-top: -10px;
+
+    background: linear-gradient(
+        180deg,
+        #4167ac,
+        #121f3b
+    );
+
+    border-radius: 28px;
+
+    padding: 40px 36px 34px;
+
+    box-shadow:
+        0 30px 60px rgba(0, 10, 40, 0.55),
+        0 8px 18px rgba(0, 255, 255, 0.08);
+
+    backdrop-filter: blur(10px);
 }
 
-.login-card button {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #ffffff, #d9f3ff);
-    color: #06477d;
-    font-weight: bold;
-    cursor: pointer;
-}
+.login-card h1 {
+    text-align: center;
 
-.login-card a {
+    font-size: 3rem;
+    font-weight: 800;
+
+    margin-bottom: 34px;
+
     color: white;
+
+    text-shadow:
+        0 6px 10px rgba(0, 0, 0, 0.25),
+        0 2px 2px rgba(255, 255, 255, 0.12);
+}
+
+.input-group {
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 18px;
+
+    margin-bottom: 24px;
+
+    border-radius: 12px;
+
+    border: 2px solid rgba(255, 255, 255, 0.356);
+
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.input-group input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 1.08rem;
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.btn-login {
+    width: 100%;
+    height: 64px;
+
+    margin-top: 10px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: linear-gradient(
+        90deg,#77b0be, #2797b4);
+    
+
+    color: white;
+
+    font-size: 1.15rem;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(0,255,255,0.18);
+
+    transition: 0.25s;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.05);
+}
+
+.login-separator {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    margin: 30px 0 22px;
+}
+
+.login-separator span {
+    flex: 1;
+
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.login-separator p {
     font-weight: bold;
+    color: white;
 }
 
-.login-features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-top: 22px;
+.registro-texto {
+    text-align: center;
+
+    margin-bottom: 16px;
+
+    font-size: 1.05rem;
 }
 
-.login-features div {
-    background: rgba(255,255,255,0.16);
-    border-radius: 18px;
-    padding: 12px 8px;
-    font-size: 0.85rem;
+.btn-registro {
+    width: 240px;
+    height: 48px;
+
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    border: 1px solid #34ccf1;
+
+    color: #9bddee;
+
+    text-decoration: none;
+
+    font-weight: 800;
+    font-size: 1rem;
+
+    transition: 0.25s;
+}
+
+.btn-registro:hover {
+    background: rgba(21, 216, 223, 0.12);
+
+    transform: translateY(-1px);
+}
+
+.mensaje-login,
+.errores-login {
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.errores-login p {
+    color: #ffb3b3;
+    margin-bottom: 6px;
+}
+
+/* RESPONSIVE LOGIN */
+@media (max-width: 700px) {
+
+    .login-wrapper {
+        padding: 40px 16px;
+    }
+
+    .login-logo {
+        width: 290px;
+    }
+
+    .login-frase {
+        font-size: 1.15rem;
+    }
+
+    .login-card {
+        padding: 30px 22px;
+    }
+
+    .login-card h1 {
+        font-size: 2.3rem;
+    }
+
+    .input-group {
+        height: 58px;
+    }
+
+    .btn-login {
+        height: 58px;
+    }
 }

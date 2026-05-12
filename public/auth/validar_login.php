@@ -57,13 +57,13 @@ try {
 
     if ($usuario['rol'] === 'facultativo') {
 
-    header('Location: ../crear_traslado.php');
+    header('Location: ../facultativo/panel_facultativo.php');
     exit;
 }
 
 if ($usuario['rol'] === 'celador') {
 
-    header('Location: ../listar_traslados.php');
+    header('Location: ../celador/panel_celador.php');
     exit;
 
 
