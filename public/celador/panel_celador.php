@@ -26,9 +26,12 @@ $usuario = $_SESSION['usuario'];
         <h1>Panel celador</h1>
 
         <p class="dashboard-saludo">
-            Bienvenido/a <?= htmlspecialchars($usuario['nombre']) ?>
-            <?= htmlspecialchars($usuario['apellidos']) ?>
-        </p>
+    Bienvenido/a:
+    <span class="dashboard-nombre">
+        <?= htmlspecialchars($usuario['nombre']) ?>
+        <?= htmlspecialchars($usuario['apellidos']) ?>
+    </span>
+</p>
 
         <div class="dashboard-actions">
             <a href="../listar_traslados.php" class="dashboard-btn principal">

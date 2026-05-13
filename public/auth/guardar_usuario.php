@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 session_start();
 
@@ -110,6 +108,12 @@ try {
     header('Location: login.php');
     exit;
 
-} catch (PDOException $e) {
-    die('Error al registrar usuario: ' . $e->getMessage());
+}catch (PDOException $e) {
+
+    $_SESSION['errores_registro'] = [
+        'Ha ocurrido un error al registrar el usuario.'
+    ];
+
+    header('Location: registro.php');
+    exit;
 }

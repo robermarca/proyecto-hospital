@@ -12,66 +12,114 @@ unset($_SESSION['datos_registro']);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de usuario - CelCare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CelCare | Registro</title>
     <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
 
-    <main class="contenedor-formulario">
+<body class="login-page">
 
-        <h1>Registro de usuario</h1>
+<main class="login-wrapper">
+
+    <section class="login-brand">
+        <img class="registro-logo" src="../imagenes/logo.png" alt="Logo CelCare" class="login-logo">
+
+        <p class="login-frase">
+            Crea tu cuenta para gestionar traslados<br>
+            de forma segura y eficiente.
+        </p>
+    </section>
+
+    <section class="login-card">
+
+        <h1>Registro</h1>
 
         <?php if (!empty($errores)): ?>
-            <div class="mensaje-error">
-                <ul>
-                    <?php foreach ($errores as $error): ?>
-                        <li><?= htmlspecialchars($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
+            <div class="errores-login">
+                <?php foreach ($errores as $error): ?>
+                    <p><?= htmlspecialchars($error) ?></p>
+                <?php endforeach; ?>
             </div>
         <?php endif; ?>
 
         <form action="guardar_usuario.php" method="POST">
 
-            <label for="nombre">Nombre</label>
-            <input type="text" name="nombre" id="nombre" value="<?= htmlspecialchars($datos['nombre'] ?? '') ?>"
-            >
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="nombre" 
+                    placeholder="Nombre"
+                    value="<?= htmlspecialchars($datos['nombre'] ?? '') ?>"
+                    required>
+            </div>
 
-            <label for="apellidos">Apellidos</label>
-            <input type="text" name="apellidos" id="apellidos"value="<?= htmlspecialchars($datos['apellidos'] ?? '') ?>"
-            >
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="apellidos" 
+                    placeholder="Apellidos"
+                    value="<?= htmlspecialchars($datos['apellidos'] ?? '') ?>"
+                    required>
+            </div>
 
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" value="<?= htmlspecialchars($datos['email'] ?? '') ?>"
-            >
+            <div class="input-group">
+                <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="Email"
+                    value="<?= htmlspecialchars($datos['email'] ?? '') ?>"
+                    required>
+            </div>
 
-            <label for="password">Contraseña</label>
-            <input type="password" name="password" id="password">
+            <div class="input-group">
+                <input 
+                    type="password" 
+                    name="password" 
+                    placeholder="Contraseña"
+                    required>
+            </div>
 
-            <label for="confirmar_password">Confirmar contraseña</label>
-            <input type="password" name="confirmar_password" id="confirmar_password">
+            <div class="input-group">
+                <input 
+                    type="password" 
+                    name="confirmar_password" 
+                    placeholder="Confirmar contraseña"
+                    required>
+            </div>
 
-            <label for="rol">Rol</label>
-            <select name="rol" id="rol">
-                <option value="">Selecciona un rol</option>
-                <option value="facultativo" <?= (($datos['rol'] ?? '') === 'facultativo') ? 'selected' : '' ?>>
-                    Facultativo
-                </option>
-                <option value="celador" <?= (($datos['rol'] ?? '') === 'celador') ? 'selected' : '' ?>>
-                    Celador
-                </option>
-            </select>
+            <div class="input-group">
+                <select name="rol" id="rol" required>
+                    <option value="">Selecciona un rol</option>
+                    <option value="facultativo" <?= (($datos['rol'] ?? '') === 'facultativo') ? 'selected' : '' ?>>
+                        Facultativo
+                    </option>
+                    <option value="celador" <?= (($datos['rol'] ?? '') === 'celador') ? 'selected' : '' ?>>
+                        Celador
+                    </option>
+                </select>
+            </div>
 
-            <button type="submit">Crear cuenta</button>
+            <button type="submit" class="btn-login">
+                CREAR CUENTA
+            </button>
 
         </form>
 
-        <p>
-            ¿Ya tienes cuenta?
-            <a href="login.php">Inicia sesión</a>
-        </p>
+        <div class="login-separator">
+            <span></span>
+            <p>o</p>
+            <span></span>
+        </div>
 
-    </main>
+        <p class="registro-texto">¿Ya tienes cuenta?</p>
+
+        <a href="login.php" class="btn-registro">
+            INICIA SESIÓN
+        </a>
+
+    </section>
+
+</main>
 
 </body>
 </html>

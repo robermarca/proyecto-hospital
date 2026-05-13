@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 session_start();
 
@@ -54,6 +52,7 @@ try {
     ];
 
     $_SESSION['id_usuario'] = $usuario['id_usuario'];
+    $_SESSION['rol'] = $usuario['rol'];
 
     if ($usuario['rol'] === 'facultativo') {
 
@@ -72,6 +71,8 @@ if ($usuario['rol'] === 'celador') {
 header('Location: ../index.php');
 exit;
 
-}catch (PDOException $e) {
-    die('Error al iniciar sesión: ' . $e->getMessage());
+} catch (PDOException $e) {
+    $_SESSION['errores_login'] = ['Ha ocurrido un error al iniciar sesión.'];
+    header('Location: login.php');
+    exit;
 }

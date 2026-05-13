@@ -25,9 +25,12 @@ $usuario = $_SESSION['usuario'];
         <h1>Panel facultativo</h1>
 
         <p class="dashboard-saludo">
-            Bienvenido/a  <?= htmlspecialchars($usuario['nombre']) ?>
-            <?= htmlspecialchars($usuario['apellidos']) ?>
-        </p>
+    Bienvenido/a:
+    <span class="dashboard-nombre">
+        <?= htmlspecialchars($usuario['nombre']) ?>
+        <?= htmlspecialchars($usuario['apellidos']) ?>
+    </span>
+</p>
 
         <div class="dashboard-actions">
             <a href="../crear_traslado.php" class="dashboard-btn principal">

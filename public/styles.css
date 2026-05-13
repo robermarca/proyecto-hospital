@@ -352,6 +352,7 @@ body.dashboard-page {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background-image: url("imagenes/fondo.png");
+    background-attachment: fixed;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -366,7 +367,7 @@ body.dashboard-page {
     position: relative;
     flex-direction: column;
     align-items: center;
-    padding: 100px 20px 70px;
+    padding: 38px 20px 24px;
 }
 .dashboard-glow {
     position: absolute;
@@ -381,13 +382,13 @@ body.dashboard-page {
 
 .dashboard-brand {
     text-align: center;
-    margin-bottom: 44px;
+    margin-bottom: 28px;
 }
 
 .dashboard-logo {
-    width: 400px;
+    width: 210px;
     max-width: 82vw;
-    margin-top: 20px;
+    margin-top: 0;
     filter:
         drop-shadow(0 26px 36px rgba(0, 0, 0, 0.48))
         drop-shadow(0 0 34px rgba(72, 220, 240, 0.22));
@@ -397,12 +398,12 @@ body.dashboard-page {
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 620px;
+    max-width: 460px;
     background: linear-gradient(180deg,rgba(38, 77, 144, 0.96),
         rgba(13, 28, 58, 0.98)
     );
     border-radius: 30px;
-    padding: 42px 52px 40px;
+    padding: 28px 30px 28px;
     text-align: center;
     box-shadow:
         0 35px 70px rgba(0, 10, 40, 0.80),
@@ -412,9 +413,9 @@ body.dashboard-page {
 
 
 .dashboard-card h1 {
-    font-size: 2.7rem;
+    font-size: 2.2rem;
     font-weight: 800;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     color: rgb(222, 225, 227);
     text-shadow:
         0 6px 10px rgba(0, 0, 0, 0.32),
@@ -422,32 +423,33 @@ body.dashboard-page {
 }
 
 .dashboard-saludo {
-    font-size: 1.15rem;
+    font-size: 1rem;
     line-height: 1.4;
-    margin-bottom: 34px;
+    margin-bottom: 20px;
     color: rgba(201, 225, 240, 0.92);
 }
 
 .dashboard-actions {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 10px;
 }
 
 .dashboard-btn {
     width: 100%;
-    min-height: 62px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 13px;
     text-decoration: none;
-    font-size: 1.15rem;
+    font-size: 1.08rem;
     font-weight: 800;
     color: white;
     border: 2px solid #77b0be;
     background: rgba(255, 255, 255, 0.02);
     transition: 0.25s;
+    gap: 10px;
 }
 
 .dashboard-btn.principal {
@@ -465,119 +467,63 @@ body.dashboard-page {
 
 .dashboard-btn:hover {
     transform: translateY(-2px);
-    filter: brightness(1.08);
+    filter: brightness(1.04);
+}
+.dashboard-nombre {
+    color: #78dff1;
+    font-weight: 700;
 }
 
-@media (max-width: 700px) {
-
-    .dashboard-wrapper {
-        padding: 70px 16px 60px;
-    }
-
-    .dashboard-brand {
-        margin-bottom: 42px;
-    }
-
-    .dashboard-logo {
-        width: 360px;
-        max-width: 92vw;
-    }
-
-    .dashboard-card {
-        max-width: 470px;
-        border-radius: 28px;
-        padding: 36px 24px 34px;
-    }
-
-    .dashboard-card h1 {
-        font-size: 2.2rem;
-    }
-
-    .dashboard-saludo {
-        font-size: 1.05rem;
-        margin-bottom: 30px;
-    }
-
-    .dashboard-actions {
-        gap: 16px;
-    }
-
-    .dashboard-btn {
-        min-height: 58px;
-        font-size: 1.05rem;
-    }
-
-    .dashboard-card::after {
-        left: 12%;
-        right: 12%;
-        bottom: -12px;
-    }
-}
 /* LOGIN */
 
 body.login-page {
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-
     background-image: url("imagenes/fondo.png");
+    background-attachment: fixed;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
     background-color: #0d4ea3;
-
     color: white;
-
     position: relative;
     overflow-x: hidden;
 }
 
 .login-wrapper {
     min-height: 100vh;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    padding: 50px 20px;
-
+    padding: 24px 20px 24px;
     position: relative;
     z-index: 2;
 }
 
 .login-brand {
     text-align: center;
-
-    margin-bottom: 45px;
-
+    margin-bottom: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .login-logo {
-    width: 520px;
+    width: 360px;
     max-width: 92%;
-
     margin-bottom: 12px;
-
     filter:
         drop-shadow(0 18px 30px rgba(0, 0, 0, 0.35))
         drop-shadow(0 0 22px rgba(129, 194, 224, 0.16));
-
     transition: 0.3s ease;
 }
 
 .login-frase {
-    margin-top: 12px;
-
-    font-size: 1.55rem;
-    line-height: 1.5;
-
+    margin-top: 4px;
+    font-size: 1.25rem;
+    line-height: 1.35;
     font-weight: 500;
-
     color: white;
-
     text-shadow:
         0 5px 12px rgba(0, 35, 80, 0.5);
 }
@@ -586,66 +532,47 @@ body.login-page {
     width: 100%;
     max-width: 470px;
     margin-top: -10px;
-
     background: linear-gradient(
         180deg,
         #4167ac,
         #121f3b
     );
-
     border-radius: 28px;
-
-    padding: 40px 36px 34px;
-
+    padding: 32px 36px 28px;
     box-shadow:
         0 30px 60px rgba(0, 10, 40, 0.55),
         0 8px 18px rgba(0, 255, 255, 0.08);
-
     backdrop-filter: blur(10px);
 }
 
 .login-card h1 {
     text-align: center;
-
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 800;
-
-    margin-bottom: 34px;
-
+    margin-bottom: 26px;
     color: white;
-
     text-shadow:
         0 6px 10px rgba(0, 0, 0, 0.25),
         0 2px 2px rgba(255, 255, 255, 0.12);
 }
 
 .input-group {
-    height: 64px;
-
+    height: 56px;
     display: flex;
     align-items: center;
-
     padding: 0 18px;
-
-    margin-bottom: 24px;
-
+    margin-bottom: 18px;
     border-radius: 12px;
-
-    border: 2px solid rgba(255, 255, 255, 0.356);
-
+    border: 1px solid rgba(255, 255, 255, 0.22);
     background: rgba(255, 255, 255, 0.02);
 }
 
 .input-group input {
     width: 100%;
-
     border: none;
     outline: none;
-
     background: transparent;
-
     color: white;
-
     font-size: 1.08rem;
 }
 
@@ -655,29 +582,19 @@ body.login-page {
 
 .btn-login {
     width: 100%;
-    height: 64px;
-
+    height: 58px;
     margin-top: 10px;
-
     border: none;
     border-radius: 12px;
-
     background: linear-gradient(
         90deg,#77b0be, #2797b4);
-    
-
     color: white;
-
     font-size: 1.15rem;
     font-weight: 800;
-
     letter-spacing: 0.5px;
-
     cursor: pointer;
-
     box-shadow:
         0 8px 20px rgba(0,255,255,0.18);
-
     transition: 0.25s;
 }
 
@@ -761,30 +678,87 @@ body.login-page {
 @media (max-width: 700px) {
 
     .login-wrapper {
-        padding: 40px 16px;
+        padding: 22px 16px 24px;
+    }
+
+    .login-brand {
+        margin-bottom: 24px;
     }
 
     .login-logo {
-        width: 290px;
+        width: 300px;
+        max-width: 90vw;
+        margin-bottom: 6px;
     }
 
     .login-frase {
-        font-size: 1.15rem;
+        font-size: 1rem;
+        line-height: 1.35;
+        margin-top: 6px;
     }
 
     .login-card {
-        padding: 30px 22px;
+        max-width: 470px;
+        padding: 30px 22px 28px;
+        border-radius: 26px;
     }
 
     .login-card h1 {
-        font-size: 2.3rem;
+        font-size: 2.25rem;
+        margin-bottom: 26px;
     }
 
     .input-group {
         height: 58px;
+        margin-bottom: 18px;
     }
 
     .btn-login {
         height: 58px;
+        margin-top: 6px;
     }
+
+    .login-separator {
+        margin: 24px 0 18px;
+    }
+
+    .registro-texto {
+        margin-bottom: 12px;
+    }
+
+    .btn-registro {
+        height: 46px;
+    }
+}
+
+/*REGISTRO*/
+.input-group select {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: auto;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.input-group select option {
+    background: #1c315e;
+    color: white;
+}
+/*LOGO REGISTRO*/
+.registro-logo {
+    width: 90px;
+    max-width: 40vw;
+
+    margin-bottom: 10px;
+
+    filter:
+        drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35))
+        drop-shadow(0 0 18px rgba(72, 220, 240, 0.18));
 }
