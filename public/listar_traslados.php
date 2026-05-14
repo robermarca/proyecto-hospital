@@ -152,6 +152,7 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 class="boton-accion cancelar">
                                 Cancelar
                             </button>
+                            <a href="ruta.php?id_traslado=<?= htmlspecialchars($t['id_traslado']) ?>" class="boton-accion ruta">Ver ruta </a>
 
                         </form>
                     <?php endif; ?>

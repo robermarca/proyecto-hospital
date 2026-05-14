@@ -43,7 +43,7 @@ if (!$paciente || !$origen || !$destino || !$facultativo) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Confirmar traslado</title>
+    <title>Revisar traslado</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="dashboard-page">
@@ -56,7 +56,7 @@ if (!$paciente || !$origen || !$destino || !$facultativo) {
     <div class="dashboard-glow"></div>
 
     <section class="dashboard-card traslado-form-card">
-        <h1>Confirmar traslado</h1>
+        <h1>Revisar traslado</h1>
 
         <div class="resumen-traslado pendiente">
             <p><strong>Paciente:</strong> <?= htmlspecialchars($paciente['apellidos'] . ', ' . $paciente['nombre']) ?></p>
