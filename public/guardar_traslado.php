@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once __DIR__ . '/auth/solo_facultativo.php';
 require_once __DIR__ . '/../app/config/conexion.php';
 
@@ -51,18 +47,30 @@ if (!empty($errores)) {
         <title>Error al guardar traslado</title>
         <link rel="stylesheet" href="styles.css">
     </head>
-    <body>
-        <h1>Error al guardar traslado</h1>
+    <body class="dashboard-page">
+    <main class="dashboard-wrapper">
 
-        <div class="card pendiente">
-            <ul style="color:red;">
-                <?php foreach ($errores as $error): ?>
-                    <li><?= htmlspecialchars($error) ?></li>
-                <?php endforeach; ?>
-            </ul>
+        <section class="dashboard-brand">
+            <img src="imagenes/logo.png" alt="CelCare" class="dashboard-logo logo-traslado">
+        </section>
 
-            <a href="crear_traslado.php" class="boton-enlace">Volver a nuevo traslado</a>
-        </div>
+        <div class="dashboard-glow"></div>
+
+        <section class="dashboard-card traslado-form-card">
+            <h1>Error al guardar</h1>
+
+            <div class="resumen-traslado error-traslado">
+                <ul>
+                    <?php foreach ($errores as $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <a href="crear_traslado.php" class="dashboard-btn principal">Volver a nuevo traslado</a>
+        </section>
+
+    </main>
     </body>
     </html>
     <?php
@@ -111,16 +119,26 @@ $stmt->execute([
     <title>Traslado guardado</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="dashboard-page">
+<main class="dashboard-wrapper">
 
-    <h1>Traslado guardado</h1>
+    <section class="dashboard-brand">
+        <img src="imagenes/logo.png" alt="CelCare" class="dashboard-logo logo-traslado">
+    </section>
 
-    <div class="card pendiente">
-        <strong>El traslado se ha guardado correctamente.</strong><br><br>
+    <div class="dashboard-glow"></div>
 
-        <a href="crear_traslado.php" class="boton-enlace">Nuevo traslado</a>
-        <a href="listar_traslados.php" class="boton-enlace">Ver listado</a>
-    </div>
+    <section class="dashboard-card traslado-form-card">
+        <h1>Traslado guardado</h1>
 
+        <div class="resumen-traslado pendiente">
+            <p><strong>El traslado se ha guardado correctamente.</strong></p>
+        </div>
+
+        <a href="crear_traslado.php" class="dashboard-btn principal">Nuevo traslado</a>
+        <a href="listar_traslados.php" class="dashboard-btn">Ver listado</a>
+    </section>
+
+</main>
 </body>
 </html>

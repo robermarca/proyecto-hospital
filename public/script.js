@@ -39,18 +39,20 @@ function activarAutocomplete(inputId, listaId, hiddenId, datos) {
 activarAutocomplete("buscar_paciente", "lista_pacientes", "id_paciente", pacientes);
 activarAutocomplete("buscar_origen", "lista_origen", "id_origen", ubicaciones);
 activarAutocomplete("buscar_destino", "lista_destino", "id_destino", ubicaciones);
-activarAutocomplete("buscar_facultativo", "lista_facultativos", "id_facultativo", facultativos);
 
 const form = document.querySelector("form");
 const origenSelect = document.getElementById("id_origen");
 const destinoSelect = document.getElementById("id_destino");
 
 form.addEventListener("submit", function(e) {
+
     const origen = origenSelect.value;
     const destino = destinoSelect.value;
 
     if (origen && destino && origen === destino) {
+
         alert("El origen y el destino no pueden ser el mismo.");
+
         e.preventDefault();
     }
 });

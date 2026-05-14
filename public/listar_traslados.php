@@ -1,10 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 require_once __DIR__ . '/auth/auth.php';
-require_once "../app/config/conexion.php";
+require_once __DIR__ . '/../app/config/conexion.php';
 
 $usuario = $_SESSION['usuario'];
 $rol = $usuario['rol'];
@@ -45,94 +42,138 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body class="dashboard-page">
+<main class="dashboard-wrapper">
 
-    <div class="header-titulo">
-        <h1>Lista de traslados</h1>
-        <img src="imagenes/logo.png" alt="CelCare" class="logo">
-    </div>
+   <div class="dashboard-glow"></div>
 
-<?php if (count($traslados) > 0): ?>
+    <section class="listado-header-sticky">
 
-    <?php foreach ($traslados as $t): ?>
-
-        <div class="card <?php echo htmlspecialchars($t['estado']); ?>">
-
-            <strong>
-                <?php echo htmlspecialchars($t['nombre'] . " " . $t['apellidos']); ?>
-            </strong><br><br>
-            
-            <?php echo htmlspecialchars($t['origen']); ?> → <?php echo htmlspecialchars($t['destino']); ?><br><br>
-
-            <?php if (!empty($t['prueba_solicitada'])): ?>
-                <span class="prueba">
-                    Prueba: <?php echo htmlspecialchars($t['prueba_solicitada']); ?>
-                </span><br><br>
-            <?php endif; ?>
-
-            <span><strong>Facultativo:</strong> <?php echo htmlspecialchars($t['facultativo_nombre']); ?></span><br><br>
-            <span><strong>Celador:</strong> <?php echo htmlspecialchars($t['celador_nombre']); ?></span><br><br>
-
-            <span class="estado-texto <?= htmlspecialchars($t['estado']); ?>">
-    <strong>Estado:</strong> <?= htmlspecialchars($t['estado']); ?>
-            </span><br><br>
-
-            <span class="hora">
-                <?php echo date('H:i', strtotime($t['fecha_solicitud'])); ?>
-            </span><br>
-
-            <span class="fecha">
-                <?php echo date('d/m/y', strtotime($t['fecha_solicitud'])); ?>
-            </span>
-
-            <br><br>
-
-            <?php if ($rol === 'celador' && $t['estado'] !== 'cancelado' && $t['estado'] !== 'completado'
-): ?>
-                <form class="acciones-traslado" method="POST">
-
-                    <input type="hidden" name="id_traslado" value="<?= htmlspecialchars($t['id_traslado']) ?>">
-
-                    <select name="estado" class="select-estado">
-                        <option value="pendiente" <?= $t['estado'] === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
-                        <option value="en_curso" <?= $t['estado'] === 'en_curso' ? 'selected' : '' ?>>En curso</option>
-                        <option value="completado" <?= $t['estado'] === 'completado' ? 'selected' : '' ?>>Completado</option>
-                        <option value="pospuesto" <?= $t['estado'] === 'pospuesto' ? 'selected' : '' ?>>Pospuesto</option>
-                    </select>
-
-                    <button 
-                        type="submit" 
-                        formaction="actualizar_estado.php"
-                        class="boton-accion actualizar">
-                        Actualizar
-                    </button>
-
-                    <button 
-                        type="submit" 
-                        formaction="cancelar_traslado.php"
-                        class="boton-accion cancelar">
-                        Cancelar
-                    </button>
-
-                </form>
-            <?php endif; ?>
-
+        <div class="listado-header-marca">
+            <img src="imagenes/logo.png" alt="CelCare" class="listado-header-logo">
+            <h1>Lista de traslados</h1>
         </div>
 
-    <?php endforeach; ?>
+        <div class="listado-header-acciones">
+            <?php if ($rol === 'facultativo'): ?>
+                <a href="crear_traslado.php" class="dashboard-btn principal">
+                    + Nuevo traslado
+                </a>
+            <?php endif; ?>
+        </div>
 
-<?php else: ?>
+    </section>
 
-    <p>No hay traslados registrados.</p>
+    <section class="listado-traslados">
 
-<?php endif; ?>
+        <?php if (count($traslados) > 0): ?>
 
-<br>
-<?php if ($rol === 'facultativo'): ?>
-    <div class="barra-inferior">
-        <a href="crear_traslado.php" class="boton-enlace">+ Nuevo traslado</a>
-    </div>
-<?php endif; ?>
+            <?php foreach ($traslados as $t): ?>
 
+                <article class="traslado-card <?= htmlspecialchars($t['estado']) ?>">
+
+                    <div class="traslado-header">
+                        <div class="paciente-info">
+                            <h2>
+                                <?= htmlspecialchars($t['nombre'] . " " . $t['apellidos']) ?>
+                            </h2>
+
+                            <p class="ruta-traslado">
+                                <?= htmlspecialchars($t['origen']) ?>
+                                <span class="flecha">→</span>
+                                <?= htmlspecialchars($t['destino']) ?>
+                            </p>
+                        </div>
+
+                        <div class="estado-badge <?= htmlspecialchars($t['estado']) ?>">
+                            <?= strtoupper(htmlspecialchars(str_replace('_', ' ', $t['estado']))) ?>
+                        </div>
+                    </div>
+
+                    <div class="traslado-body">
+
+                        <div class="traslado-detalles">
+                            <?php if (!empty($t['prueba_solicitada'])): ?>
+                                <p>
+                                    <strong>Prueba:</strong>
+                                    <?= htmlspecialchars($t['prueba_solicitada']) ?>
+                                </p>
+                            <?php endif; ?>
+
+                            <p>
+                                <strong>Facultativo:</strong>
+                                <?= htmlspecialchars($t['facultativo_nombre']) ?>
+                            </p>
+
+                            <p>
+                                <strong>Celador:</strong>
+                                <?= htmlspecialchars($t['celador_nombre']) ?>
+                            </p>
+                        </div>
+
+                        <div class="traslado-fecha">
+                            <span class="hora">
+                                <?= date('H:i', strtotime($t['fecha_solicitud'])) ?>
+                            </span>
+
+                            <span class="fecha">
+                                <?= date('d/m/y', strtotime($t['fecha_solicitud'])) ?>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <?php if (
+                        $rol === 'celador' &&
+                        $t['estado'] !== 'cancelado' &&
+                        $t['estado'] !== 'completado'
+                    ): ?>
+                        <form class="acciones-traslado" method="POST">
+
+                            <input type="hidden" name="id_traslado" value="<?= htmlspecialchars($t['id_traslado']) ?>">
+
+                            <select name="estado" class="select-estado">
+                                <option value="pendiente" <?= $t['estado'] === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
+                                <option value="en_curso" <?= $t['estado'] === 'en_curso' ? 'selected' : '' ?>>En curso</option>
+                                <option value="completado" <?= $t['estado'] === 'completado' ? 'selected' : '' ?>>Completado</option>
+                                <option value="pospuesto" <?= $t['estado'] === 'pospuesto' ? 'selected' : '' ?>>Pospuesto</option>
+                            </select>
+
+                            <button 
+                                type="submit" 
+                                formaction="actualizar_estado.php"
+                                class="boton-accion actualizar">
+                                Actualizar
+                            </button>
+
+                            <button 
+                                type="submit" 
+                                formaction="cancelar_traslado.php"
+                                class="boton-accion cancelar">
+                                Cancelar
+                            </button>
+
+                        </form>
+                    <?php endif; ?>
+
+                </article>
+
+            <?php endforeach; ?>
+
+        <?php else: ?>
+
+            <section class="dashboard-card traslado-form-card">
+                <h1>No hay traslados</h1>
+                <p class="dashboard-saludo">
+                    Todavía no hay traslados registrados.
+                </p>
+            </section>
+
+        <?php endif; ?>
+
+    </section>
+    <a href="index.php" class="btn-volver-flotante">Volver</a>
+
+</main>
 </body>
 </html>
