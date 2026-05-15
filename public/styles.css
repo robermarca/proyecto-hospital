@@ -1053,3 +1053,190 @@ body.login-page {
     cursor: pointer;
     transition: 0.25s;
 }
+/* RUTAS */
+
+.ruta-wrapper{
+    width: 95%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.ruta-titulo{
+    color: white;
+    font-size: 2.4rem;
+    margin-bottom: 25px;
+}
+
+.selector-plantas{
+    margin-bottom: 25px;
+}
+
+.selector-plantas button{
+
+    padding: 12px 22px;
+    margin: 0 10px;
+    border:none;
+    border-radius: 14px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.selector-plantas button:hover{
+    transform:translateY(-2px);
+}
+
+.mapa-container{
+
+    position:relative;
+    width:75%;
+    max-width: 1000px;
+    margin: 30px auto;
+    border-radius:0;
+    overflow:hidden;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.65);
+}
+
+#mapaHospital{
+    width:100%;
+    display:block;
+}
+
+#capaRutas{
+
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+}
+
+.mapa-container{
+    position: relative;
+
+    width: 85%;
+    max-width: 1200px;
+
+    margin: 30px auto;
+
+    border-radius: 0;
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.65);
+}
+
+#mapaHospital{
+    width: 100%;
+    display: block;
+}
+/* BOTONES PLANTAS */
+
+.selector-plantas{
+    margin-bottom: 25px;
+}
+
+.btn-planta{
+
+    padding: 12px 24px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 1rem;
+}
+
+.btn-planta:hover{
+    transform: translateY(-2px) scale(1.03);
+}
+
+/* Planta Baja */
+
+.btn-pb{
+    background: linear-gradient(
+        135deg,
+        #e4d592,
+        #9a7d15
+    );
+
+    color:#1a1a1a;
+}
+
+/* Planta 1 */
+
+.btn-p1{
+    background: linear-gradient(
+        135deg,
+        #9cc8fd,
+        #153865
+    );
+}
+
+/* Planta 2 */
+
+.btn-p2{
+    background: linear-gradient(
+        135deg,
+        #f79898,
+        #742626
+    );
+}
+/* PANEL CAMBIO DE PLANTA */
+
+.panel-cambio-planta {
+    max-width: 520px;
+    margin: 22px auto 0;
+    padding: 18px 24px;
+
+    border-radius: 20px;
+    background: linear-gradient(
+        180deg,
+        rgba(30, 52, 92, 0.96),
+        rgba(11, 24, 48, 0.98)
+    );
+
+    border: 1px solid rgba(119, 176, 190, 0.25);
+
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.45),
+        0 0 24px rgba(119, 176, 190, 0.12);
+
+    color: white;
+    text-align: center;
+}
+
+.panel-cambio-planta p {
+    margin: 0 0 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #dcecff;
+}
+
+.btn-continuar-ruta {
+    min-width: 190px;
+    height: 46px;
+
+    border: none;
+    border-radius: 13px;
+
+    background: linear-gradient(90deg, #77b0be, #2797b4);
+    color: white;
+
+    font-weight: 800;
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.btn-continuar-ruta:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+.oculto {
+    display: none;
+}
