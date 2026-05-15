@@ -11,7 +11,12 @@ $texto_facultativo =
     $usuario['apellidos'] . ', ' . $usuario['nombre'];
 
 
-$sqlPacientes = "SELECT id_paciente, nombre, apellidos FROM pacientes ORDER BY apellidos, nombre";
+$sqlPacientes = " SELECT p.id_paciente, p.nombre, p.apellidos, p.habitacion, p.planta_habitacion, u.id_ubicacion AS id_origen, u.nombre AS ubicacion_origen, u.planta AS planta_origen
+FROM pacientes p
+LEFT JOIN ubicaciones u
+    ON u.nombre = CONCAT('Habitación ', p.habitacion)
+ORDER BY p.apellidos, p.nombre
+";
 $stmtPacientes = $conexion->query($sqlPacientes);
 $pacientes = $stmtPacientes->fetchAll(PDO::FETCH_ASSOC);
 
@@ -76,13 +81,23 @@ foreach ($ubicaciones as $u) {
             </div>
 
             <br>
-
             <div class="campo">
-                <label for="buscar_origen">Origen</label>
-                <input type="text" name="buscar_origen" id="buscar_origen" placeholder="Buscar origen..." autocomplete="off" required value="<?= htmlspecialchars($texto_origen) ?>">
+                <label for="buscar_origen">Origen automático</label>
 
-                <input type="hidden" name="id_origen" id="id_origen" value="<?= htmlspecialchars($id_origen_seleccionado) ?>">
-                <div id="lista_origen" class="lista-sugerencias"></div>
+                <input
+                    type="text"
+                    name="buscar_origen"
+                    id="buscar_origen"
+                    placeholder="Se rellenará al seleccionar paciente"
+                    autocomplete="off"
+                    readonly
+                    required
+                    value="<?= htmlspecialchars($texto_origen) ?>">
+                <input
+                    type="hidden"
+                    name="id_origen"
+                    id="id_origen"
+                    value="<?= htmlspecialchars($id_origen_seleccionado) ?>">
             </div>
 
             <br>
@@ -133,7 +148,9 @@ foreach ($ubicaciones as $u) {
         array_map(function($p) {
             return [
                 'id' => $p['id_paciente'],
-                'nombre' => $p['apellidos'] . ', ' . $p['nombre']
+                'nombre' => $p['apellidos'] . ', ' . $p['nombre'],
+                'id_origen' => $p['id_origen'],
+                'origen' => $p['ubicacion_origen'] . ' - Planta ' . $p['planta_origen']
             ];
         }, $pacientes)
     ); ?>;

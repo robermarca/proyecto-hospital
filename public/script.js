@@ -13,6 +13,11 @@ function activarAutocomplete(inputId, listaId, hiddenId, datos) {
         lista.innerHTML = "";
         hidden.value = "";
 
+        if (inputId === "buscar_paciente") {
+            document.getElementById("id_origen").value = "";
+            document.getElementById("buscar_origen").value = "";
+        }
+
         if (texto.length < 1) return;
 
         const resultados = datos.filter(item =>
@@ -29,6 +34,11 @@ function activarAutocomplete(inputId, listaId, hiddenId, datos) {
                 input.value = item.nombre;
                 hidden.value = item.id;
                 lista.innerHTML = "";
+
+                if (inputId === "buscar_paciente") {
+                    document.getElementById("id_origen").value = item.id_origen;
+                    document.getElementById("buscar_origen").value = item.origen;
+                }
             });
 
             lista.appendChild(opcion);
@@ -37,7 +47,8 @@ function activarAutocomplete(inputId, listaId, hiddenId, datos) {
 }
 
 activarAutocomplete("buscar_paciente", "lista_pacientes", "id_paciente", pacientes);
-activarAutocomplete("buscar_origen", "lista_origen", "id_origen", ubicaciones);
+
+/* Origen ya NO es manual */
 activarAutocomplete("buscar_destino", "lista_destino", "id_destino", ubicaciones);
 
 const form = document.querySelector("form");
@@ -49,10 +60,14 @@ form.addEventListener("submit", function(e) {
     const origen = origenSelect.value;
     const destino = destinoSelect.value;
 
+    if (!origen) {
+        alert("Selecciona un paciente válido para obtener su origen automáticamente.");
+        e.preventDefault();
+        return;
+    }
+
     if (origen && destino && origen === destino) {
-
         alert("El origen y el destino no pueden ser el mismo.");
-
         e.preventDefault();
     }
 });

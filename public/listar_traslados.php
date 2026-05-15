@@ -32,10 +32,12 @@ ORDER BY t.fecha_solicitud DESC
 
 $stmt = $conexion->query($sql);
 $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>CelCare - Traslados</title>
@@ -43,23 +45,38 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body class="dashboard-page">
+
 <main class="dashboard-wrapper">
 
-   <div class="dashboard-glow"></div>
+    <div class="dashboard-glow"></div>
 
     <section class="listado-header-sticky">
 
         <div class="listado-header-marca">
-            <img src="imagenes/logo.png" alt="CelCare" class="listado-header-logo">
+
+            <img
+                src="imagenes/logo.png"
+                alt="CelCare"
+                class="listado-header-logo"
+            >
+
             <h1>Lista de traslados</h1>
+
         </div>
 
         <div class="listado-header-acciones">
+
             <?php if ($rol === 'facultativo'): ?>
-                <a href="crear_traslado.php" class="dashboard-btn principal">
+
+                <a
+                    href="crear_traslado.php"
+                    class="dashboard-btn principal"
+                >
                     + Nuevo traslado
                 </a>
+
             <?php endif; ?>
+
         </div>
 
     </section>
@@ -73,31 +90,44 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <article class="traslado-card <?= htmlspecialchars($t['estado']) ?>">
 
                     <div class="traslado-header">
+
                         <div class="paciente-info">
+
                             <h2>
-                                <?= htmlspecialchars($t['nombre'] . " " . $t['apellidos']) ?>
+                                <?= htmlspecialchars($t['nombre'] . ' ' . $t['apellidos']) ?>
                             </h2>
 
                             <p class="ruta-traslado">
+
                                 <?= htmlspecialchars($t['origen']) ?>
+
                                 <span class="flecha">→</span>
+
                                 <?= htmlspecialchars($t['destino']) ?>
+
                             </p>
+
                         </div>
 
                         <div class="estado-badge <?= htmlspecialchars($t['estado']) ?>">
+
                             <?= strtoupper(htmlspecialchars(str_replace('_', ' ', $t['estado']))) ?>
+
                         </div>
+
                     </div>
 
                     <div class="traslado-body">
 
                         <div class="traslado-detalles">
+
                             <?php if (!empty($t['prueba_solicitada'])): ?>
+
                                 <p>
                                     <strong>Prueba:</strong>
                                     <?= htmlspecialchars($t['prueba_solicitada']) ?>
                                 </p>
+
                             <?php endif; ?>
 
                             <p>
@@ -109,9 +139,11 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <strong>Celador:</strong>
                                 <?= htmlspecialchars($t['celador_nombre']) ?>
                             </p>
+
                         </div>
 
                         <div class="traslado-fecha">
+
                             <span class="hora">
                                 <?= date('H:i', strtotime($t['fecha_solicitud'])) ?>
                             </span>
@@ -119,6 +151,7 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <span class="fecha">
                                 <?= date('d/m/y', strtotime($t['fecha_solicitud'])) ?>
                             </span>
+
                         </div>
 
                     </div>
@@ -128,33 +161,72 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         $t['estado'] !== 'cancelado' &&
                         $t['estado'] !== 'completado'
                     ): ?>
+
                         <form class="acciones-traslado" method="POST">
 
-                            <input type="hidden" name="id_traslado" value="<?= htmlspecialchars($t['id_traslado']) ?>">
+                            <input
+                                type="hidden"
+                                name="id_traslado"
+                                value="<?= htmlspecialchars($t['id_traslado']) ?>"
+                            >
 
                             <select name="estado" class="select-estado">
-                                <option value="pendiente" <?= $t['estado'] === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
-                                <option value="en_curso" <?= $t['estado'] === 'en_curso' ? 'selected' : '' ?>>En curso</option>
-                                <option value="completado" <?= $t['estado'] === 'completado' ? 'selected' : '' ?>>Completado</option>
-                                <option value="pospuesto" <?= $t['estado'] === 'pospuesto' ? 'selected' : '' ?>>Pospuesto</option>
+
+                                <option
+                                    value="pendiente"
+                                    <?= $t['estado'] === 'pendiente' ? 'selected' : '' ?>
+                                >
+                                    Pendiente
+                                </option>
+
+                                <option
+                                    value="en_curso"
+                                    <?= $t['estado'] === 'en_curso' ? 'selected' : '' ?>
+                                >
+                                    En curso
+                                </option>
+
+                                <option
+                                    value="completado"
+                                    <?= $t['estado'] === 'completado' ? 'selected' : '' ?>
+                                >
+                                    Completado
+                                </option>
+
+                                <option
+                                    value="pospuesto"
+                                    <?= $t['estado'] === 'pospuesto' ? 'selected' : '' ?>
+                                >
+                                    Pospuesto
+                                </option>
+
                             </select>
 
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 formaction="actualizar_estado.php"
-                                class="boton-accion actualizar">
+                                class="boton-accion actualizar"
+                            >
                                 Actualizar
                             </button>
 
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 formaction="cancelar_traslado.php"
-                                class="boton-accion cancelar">
+                                class="boton-accion cancelar"
+                            >
                                 Cancelar
                             </button>
-                            <a href="ruta.php?id_traslado=<?= htmlspecialchars($t['id_traslado']) ?>" class="boton-accion ruta">Ver ruta </a>
+
+                            <a
+                                href="ver_ruta.php?id=<?= htmlspecialchars($t['id_traslado']) ?>"
+                                class="boton-accion ruta"
+                            >
+                                Ver ruta
+                            </a>
 
                         </form>
+
                     <?php endif; ?>
 
                 </article>
@@ -164,17 +236,24 @@ $traslados = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php else: ?>
 
             <section class="dashboard-card traslado-form-card">
+
                 <h1>No hay traslados</h1>
+
                 <p class="dashboard-saludo">
                     Todavía no hay traslados registrados.
                 </p>
+
             </section>
 
         <?php endif; ?>
 
     </section>
-    <a href="index.php" class="btn-volver-flotante">Volver</a>
+
+    <a href="index.php" class="btn-volver-flotante">
+        Volver
+    </a>
 
 </main>
+
 </body>
 </html>

@@ -11,8 +11,35 @@ function cambiarPlanta(planta){
     if(planta === 1){
         mapa.src = "imagenes/rutas/planta1.png";
     }
+
     if(planta === 2){
         mapa.src = "imagenes/rutas/planta2.png";
+    }
+
+    /* BOTON ACTIVO */
+
+    document
+        .querySelectorAll(".btn-planta")
+        .forEach(btn =>
+            btn.classList.remove("activa")
+        );
+
+    if(planta === 0){
+        document
+            .querySelector(".btn-pb")
+            .classList.add("activa");
+    }
+
+    if(planta === 1){
+        document
+            .querySelector(".btn-p1")
+            .classList.add("activa");
+    }
+
+    if(planta === 2){
+        document
+            .querySelector(".btn-p2")
+            .classList.add("activa");
     }
 
     plantaActual = planta;
@@ -71,6 +98,35 @@ function continuarRuta(){
         .classList.add("oculto");
 
     siguientePlanta = null;
+
+    dibujarTramoActual();
+}
+
+/* RETROCEDER RUTA */
+
+function retrocederRuta(){
+
+    if(indiceTramoActual <= 0){
+        return;
+    }
+
+    indiceTramoActual--;
+
+    while(
+        indiceTramoActual > 0 &&
+        nodos[
+            rutaCompleta[indiceTramoActual]
+        ].planta ===
+        nodos[
+            rutaCompleta[indiceTramoActual - 1]
+        ].planta
+    ){
+        indiceTramoActual--;
+    }
+
+    document
+        .getElementById("panelCambioPlanta")
+        .classList.add("oculto");
 
     dibujarTramoActual();
 }
@@ -228,18 +284,31 @@ let indiceTramoActual = 0;
 function iniciarRuta(origen, destino){
 
     rutaCompleta = calcularRuta(origen, destino);
+
+    if(!rutaCompleta){
+        alert("No se ha encontrado una ruta para este traslado.");
+        return;
+    }
+
     indiceTramoActual = 0;
 
     console.log(rutaCompleta);
 
     dibujarTramoActual();
 }
-
 function dibujarTramoActual(){
 
-    limpiarSVG();
 
     const inicio = indiceTramoActual;
+
+    const btnRetroceder =
+        document.getElementById("btnRetrocederRuta");
+
+    if(inicio > 0){
+        btnRetroceder.classList.remove("oculto");
+    }else{
+        btnRetroceder.classList.add("oculto");
+    }
 
     const plantaTramo =
         nodos[rutaCompleta[inicio]].planta;
@@ -273,7 +342,11 @@ function dibujarTramoActual(){
     }
 }
 
-iniciarRuta(
-    "cardiologia_pb",
-    "hab237_p2"
-);
+
+if(ORIGEN_RUTA && DESTINO_RUTA){
+
+    iniciarRuta(
+        ORIGEN_RUTA,
+        DESTINO_RUTA
+    );
+}

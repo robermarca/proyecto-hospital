@@ -1141,50 +1141,41 @@ body.login-page {
 
     padding: 12px 24px;
     margin: 0 10px;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.25s ease;
     border-radius: 14px;
     color: white;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
     font-size: 1rem;
+    background: linear-gradient(
+        135deg,
+        rgba(40,70,120,0.95),
+        rgba(16,35,70,0.98)
+    );
 }
 
 .btn-planta:hover{
     transform: translateY(-2px) scale(1.03);
 }
+.btn-planta.activa{
 
-/* Planta Baja */
-
-.btn-pb{
     background: linear-gradient(
         135deg,
-        #e4d592,
-        #9a7d15
+        #77b0be,
+        #2797b4
     );
 
-    color:#1a1a1a;
+    box-shadow:
+        0 0 20px rgba(0,255,255,0.35);
+
+    transform: scale(1.03);
+
+    border: 1px solid rgba(255,255,255,0.35);
 }
 
-/* Planta 1 */
 
-.btn-p1{
-    background: linear-gradient(
-        135deg,
-        #9cc8fd,
-        #153865
-    );
-}
-
-/* Planta 2 */
-
-.btn-p2{
-    background: linear-gradient(
-        135deg,
-        #f79898,
-        #742626
-    );
-}
 /* PANEL CAMBIO DE PLANTA */
 
 .panel-cambio-planta {
@@ -1237,6 +1228,33 @@ body.login-page {
     filter: brightness(1.05);
 }
 
+.oculto {
+    display: none;
+}
+.btn-volver-ruta {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 24px auto 0;
+    padding: 12px 24px;
+
+    border-radius: 14px;
+    text-decoration: none;
+
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(119,176,190,0.45);
+
+    color: #9bddee;
+    font-weight: 800;
+
+    transition: 0.25s;
+}
+
+.btn-volver-ruta:hover {
+    transform: translateY(-2px);
+    background: rgba(119,176,190,0.12);
+}
 .oculto {
     display: none;
 }
